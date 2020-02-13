@@ -10,22 +10,34 @@
     "@types/node": "^12.12.24",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
-    "husky": "^4.0.9",
-    "lint-staged": "^9.5.0",
-    "prettier": "^1.19.1",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.1.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "mongoose": "^5.8.12",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
     "typescript": "^3.7.4"
   },
+  "devDependencies": {
+    "husky": "^4.2.3",
+    "lint-staged": "^9.5.0",
+    "nodemon": "^2.0.2",
+    "prettier": "^1.19.1"
+  },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start:dev": "concurrently \"npm run server:dev\" \"npm run client\"",
+    "client": "react-scripts start",
+    "server": "node -r esm ./server/server.js",
+    "server:dev": "nodemon -r esm ./server/server.js",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "eslint": "eslint",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://localhost:8080",
   "eslintConfig": {
     "extends": "react-app"
   },
