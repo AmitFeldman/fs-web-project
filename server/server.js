@@ -1,18 +1,19 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import config from './config/config';
+import {express as expressConfig, mongo} from './config/config';
 import users from './routes/api/users';
-
-const PORT = config.express.serverPort;
-const MONGO_URI = config.mongo.mongoURI;
+import socketIO from 'socket.io';
+import http from 'http';
+import cors from 'cors';
+import {initSocketIO} from "./utils/socket-service";
 
 const app = express();
 
-// Routes
-app.use("/api/users", users);
+// Enabling CORS
+app.use(cors());
 
-// Use body-parser middleware
+// Body-parser middleware
 app.use(
   bodyParser.urlencoded({
     extended: false,
@@ -20,14 +21,30 @@ app.use(
 );
 app.use(bodyParser.json());
 
+// Routes
+app.use("/api/users", users);
+
 // Connect to MongoDB
+console.log(`connecting to MongoDB through uri ${mongo.mongoURI}...`);
 mongoose
-  .connect(MONGO_URI, {useNewUrlParser: true})
+  .connect(mongo.mongoURI, {useNewUrlParser: true})
   .then(() => console.log('successfully connected to MongoDB...'))
   .catch(err => console.log(err));
 
-// Start server
+// Express config variables
+const {serverPort, socketPort} = expressConfig;
+
+// Express server listening
 // eslint-disable-next-line no-unused-vars
-const server = app.listen(PORT, () => {
-  console.log(`server listening on port ${PORT}...`);
+const server = app.listen(serverPort, () => {
+  console.log(`server listening on port ${serverPort}...`);
 });
+
+const socketServer = http.Server(app);
+const io = socketIO(socketServer);
+
+// Socket server listening
+socketServer.listen(socketPort);
+console.log(`socket listening on port ${socketPort}...`);
+
+initSocketIO(io);
