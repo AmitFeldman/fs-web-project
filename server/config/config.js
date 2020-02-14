@@ -3,7 +3,7 @@ const express = {
   socketPort: 80,
 };
 
-// TODO: Add
+// TODO: Add Mongo Password
 const mongo = {
   user: 'alon',
   host: 'alon.documents.azure.com',
