@@ -16,7 +16,7 @@ const App: FC = () => {
     <div className="App">
       <NavBar />
 
-      <Container>
+      <Container className="Container">
         <Switch>
           <Route exact path="/">
             <Home />
