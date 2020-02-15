@@ -1,4 +1,4 @@
-import React, {createContext, useState, FC, useEffect} from 'react';
+import React, {createContext, useState, FC, useEffect, useContext} from 'react';
 import {removeToken, setToken, getUser} from '../utils/auth-client';
 import * as usersApi from '../utils/users-api';
 import {LoginBody, RegisterBody, User} from '../utils/users-api';
@@ -22,6 +22,8 @@ const getUserStatus = (user: OptionalUser) => {
 interface AuthContextData {
   user: OptionalUser;
   getUserStatus: () => UserStatus;
+  isUserLoggedIn: () => boolean;
+  isUserAdmin: () => boolean;
   login: (data: LoginBody) => Promise<void>;
   register: (data: RegisterBody) => Promise<void>;
   logout: () => Promise<void>;
@@ -30,6 +32,8 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({
   user: null,
   getUserStatus: () => UserStatus.NONE,
+  isUserLoggedIn: () => false,
+  isUserAdmin: () => false,
   login: () => Promise.resolve(),
   register: () => Promise.resolve(),
   logout: () => Promise.resolve(),
@@ -37,6 +41,7 @@ const AuthContext = createContext<AuthContextData>({
 
 const AuthProvider: FC<any> = props => {
   const [user, setUser] = useState<OptionalUser>(null);
+  const userStatus = getUserStatus(user);
 
   const reloadUser = () => {
     getUser().then(user => {
@@ -69,21 +74,23 @@ const AuthProvider: FC<any> = props => {
         login,
         register,
         logout,
-        getUserStatus: () => getUserStatus(user),
+        getUserStatus: () => userStatus,
+        isUserAdmin: () => userStatus === UserStatus.ADMIN,
+        isUserLoggedIn: () => userStatus !== UserStatus.NONE,
       }}
       {...props}
     />
   );
 };
 
-function useAuth() {
-  const context = React.useContext(AuthContext);
+const useAuth = () => {
+  const context = useContext(AuthContext);
 
   if (context === undefined) {
     throw new Error(`useAuth must be used within a AuthProvider`);
   }
 
   return context;
-}
+};
 
 export {AuthProvider, useAuth};

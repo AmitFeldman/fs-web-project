@@ -3,11 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {AuthProvider} from './context/auth-context';
+import {AuthProvider} from './context/AuthContext';
+import {BrowserRouter} from 'react-router-dom';
+import ThemeProvider from '@material-ui/styles/ThemeProvider';
+import theme from './theme/mui-theme';
 
 ReactDOM.render(
   <AuthProvider>
-    <App />
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </BrowserRouter>
   </AuthProvider>,
   document.getElementById('root')
 );
