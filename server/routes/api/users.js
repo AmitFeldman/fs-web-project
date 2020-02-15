@@ -3,6 +3,19 @@ import User from '../../models/User';
 
 const router = new Router();
 
+// GET api/users/id/:id
+router.get('/id/:id', (req, res) => {
+  const {id} = req.params;
+
+  User.findById(id).then(user => {
+    if (!user) {
+      return res.status(404).json({error: 'User not found'});
+    }
+
+    res.json(user);
+  });
+});
+
 // POST api/users/register
 router.post('/register', (req, res) => {
   const {username, email, password} = req.body;
@@ -16,7 +29,7 @@ router.post('/register', (req, res) => {
       username,
       email,
       password,
-      isAdmin: false
+      isAdmin: false,
     });
 
     newUser
@@ -32,12 +45,10 @@ router.post('/login', (req, res) => {
 
   User.findOne({email, password}).then(user => {
     if (!user) {
-      return res.status(404).json({error: 'Account not found'});
+      return res.status(404).json({error: 'User not found'});
     }
 
-    res.json({
-      user,
-    });
+    res.json(user);
   });
 });
 
