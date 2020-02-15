@@ -40,6 +40,7 @@ const UserToolbar: FC<UserToolbarProps> = ({user, logout}) => {
             onClick={({target}: MouseEvent<HTMLElement>) =>
               setUserMenuAnchor(target)
             }
+            edge="end"
             color="inherit">
             <AccountCircle />
           </IconButton>
