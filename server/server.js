@@ -8,6 +8,7 @@ import cors from 'cors';
 import {initSocketIO} from "./utils/socket-service";
 import users from './routes/api/users';
 import posts from './routes/api/posts';
+import comments from './routes/api/comments';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(bodyParser.json());
 // Routes
 app.use("/api/users", users);
 app.use("/api/posts", posts);
+app.use("/api/comments", comments);
 
 // Connect to MongoDB
 console.log(`connecting to MongoDB through uri ${mongo.mongoURI}...`);

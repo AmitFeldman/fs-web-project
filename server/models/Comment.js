@@ -1,4 +1,4 @@
-import {Schema, model, ObjectId} from 'mongoose';
+import {Schema, model} from 'mongoose';
 
 const CommentSchema = new Schema({
   author: {
