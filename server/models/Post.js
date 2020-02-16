@@ -1,21 +1,18 @@
 import {Schema, model} from 'mongoose';
 
-const UserSchema = new Schema({
-  username: {
+const PostSchema = new Schema({
+  author: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'users',
+  },
+  title: {
     type: String,
     required: true,
   },
-  email: {
+  body: {
     type: String,
     required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  isAdmin: {
-    type: Boolean,
-    default: false,
   },
   date: {
     type: Date,
@@ -23,6 +20,6 @@ const UserSchema = new Schema({
   },
 });
 
-const User = model('users', UserSchema);
+const Post = model('posts', PostSchema);
 
-export default User;
+export default Post;
