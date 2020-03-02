@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import Form from './Form';
+import Post from './Post';
 
 const Home: FC = () => {
   return (
@@ -8,7 +8,7 @@ const Home: FC = () => {
         <div className="col-12 col-lg-6 offset-lg-3">
           <h1 className="text-center">LightBlog</h1>
         </div>
-        <Form />
+        <Post />
       </div>
     </div>
   );

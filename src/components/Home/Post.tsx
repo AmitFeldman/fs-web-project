@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 
-const Form: FC = () => {
+const Post: FC = () => {
   return (
     <div className="col-12 col-lg-6 offset-lg-3">
       <input className="form-control my-3" placeholder="Post Title" />
@@ -13,4 +13,4 @@ const Form: FC = () => {
   );
 };
 
-export default Form;
+export default Post;
