@@ -16,7 +16,7 @@ const register = async (registerData: RegisterBody): Promise<User> => {
   });
 };
 
-export type LoginBody = Pick<User, 'email' | 'password'>;
+export type LoginBody = Pick<User, 'username' | 'password'>;
 
 const login = async (loginData: LoginBody): Promise<User> => {
   return await client<LoginBody, User>('users/login', {
@@ -24,8 +24,13 @@ const login = async (loginData: LoginBody): Promise<User> => {
   });
 };
 
+// Returns the user that is logged on by token
+const getMe = async (): Promise<User> => {
+  return await client<{}, User>('users/me');
+};
+
 const findUserById = async (id: User['_id']): Promise<User> => {
   return await client<{}, User>(`users/id/${id}`);
 };
 
-export {register, login, findUserById};
+export {register, login, findUserById, getMe};

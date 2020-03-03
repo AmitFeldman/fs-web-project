@@ -9,6 +9,7 @@ import {initSocketIO} from "./utils/socket-service";
 import users from './routes/api/users';
 import posts from './routes/api/posts';
 import comments from './routes/api/comments';
+import {parseToken} from "./middlewares/auth";
 
 const app = express();
 
@@ -22,6 +23,9 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+
+// Token parsing middleware
+app.use(parseToken);
 
 // Routes
 app.use("/api/users", users);

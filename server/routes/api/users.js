@@ -1,11 +1,27 @@
 import {Router} from 'express';
+import mongoose from 'mongoose';
 import User from '../../models/User';
+import {isIdValid} from "../../utils/validation";
 
 const router = new Router();
+
+// GET api/users/me
+router.get('/me', (req, res) => {
+  const {user} = req;
+
+  if (!user) {
+    return res.status(404).json({error: 'User not found'});
+  }
+
+  res.json(user);
+});
 
 // GET api/users/id/:id
 router.get('/id/:id', (req, res) => {
   const {id} = req.params;
+
+  if (!isIdValid(id))
+    return res.status(400).send({error: 'Not all information sent'});
 
   User.findById(id).then(user => {
     if (!user) {
@@ -17,33 +33,40 @@ router.get('/id/:id', (req, res) => {
 });
 
 // POST api/users/register
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const {username, email, password} = req.body;
 
-  User.findOne({email}).then(user => {
-    if (user) {
-      return res.status(400).json({error: 'Email already exists'});
-    }
+  if (!username || !password || !email)
+    return res.status(400).send({error: 'Not all information sent'});
 
-    const newUser = new User({
-      username,
-      email,
-      password,
-      isAdmin: false,
-    });
+  const existingUsername = await User.findOne({username});
+  if (existingUsername)
+    return res.status(400).json({error: 'Username already in use'});
 
-    newUser
-      .save()
-      .then(user => res.json(user))
-      .catch(err => console.log(err.message));
+  const existingEmail = await User.findOne({email});
+  if (existingEmail)
+    return res.status(400).json({error: 'Email already in use'});
+
+  const newUser = new User({
+    username,
+    password,
+    isAdmin: false,
   });
+
+  newUser
+    .save()
+    .then(user => res.json(user))
+    .catch(err => console.log(err.message));
 });
 
 // POST api/users/login
 router.post('/login', (req, res) => {
-  const {email, password} = req.body;
+  const {username, password} = req.body;
 
-  User.findOne({email, password}).then(user => {
+  if (!username || !password)
+    return res.status(400).send({error: 'Not all information sent'});
+
+  User.findOne({username, password}).then(user => {
     if (!user) {
       return res.status(404).json({error: 'User not found'});
     }

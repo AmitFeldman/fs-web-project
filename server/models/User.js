@@ -11,6 +11,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
+    select: false,
     required: true,
   },
   isAdmin: {

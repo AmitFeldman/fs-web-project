@@ -1,3 +1,5 @@
+import {getToken} from './auth-client';
+
 const PROTOCOL = 'http';
 const DOMAIN_NAME = 'localhost';
 const PORT = '8080';
@@ -20,6 +22,7 @@ const client = <Body, Response>(
   {body, ...customConfig}: RequestConfig<Body> = {}
 ): Promise<Response> => {
   const url = buildApiURL(route);
+  const token = getToken();
 
   const config: RequestInit = {
     method: body ? 'POST' : 'GET',
@@ -30,13 +33,32 @@ const client = <Body, Response>(
     },
   };
 
+  // Add token to request if user is logged in
+  if (token) {
+    config.headers = {
+      token,
+      ...config.headers,
+    };
+  }
+
   if (body) {
     config.body = JSON.stringify(body);
   }
 
   return fetch(url, config)
     .then(r => r.json())
-    .catch(err => console.log(err));
+    .then(
+      result =>
+        new Promise((resolve, reject) => {
+          const {error} = result;
+
+          if (Boolean(error)) {
+            reject(error);
+          }
+
+          resolve(result);
+        })
+    );
 };
 
 export default client;

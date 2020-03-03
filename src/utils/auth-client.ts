@@ -1,4 +1,4 @@
-import {findUserById, User} from './users-api';
+import {getMe, User} from './users-api';
 
 const LOCAL_STORAGE_KEY = '__auth_token__';
 
@@ -23,10 +23,10 @@ function getUser(): Promise<User | null> {
   }
 
   // TODO: Change id to token
-  return findUserById(token).catch(() => {
+  return getMe().catch(() => {
     removeToken();
     return Promise.resolve(null);
   });
 }
 
-export {setToken, removeToken, getUser};
+export {setToken, getToken, removeToken, getUser};
