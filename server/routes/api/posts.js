@@ -1,21 +1,65 @@
 import {Router} from 'express';
 import Post from '../../models/Post';
+import {isIdValid} from '../../utils/validation';
 
 const router = new Router();
 
+// GET api/posts
+router.get('', (req, res) => {
+  Post.find()
+    .populate('author')
+    .exec((err, posts) => {
+      if (err) return console.log(err);
+
+      res.json(posts);
+    });
+});
+
+// GET api/posts/id/:id
+router.get('/id/:id', (req, res) => {
+  const {id} = req.params;
+
+  if (!isIdValid(id)) return res.status(400).send({error: 'Id not valid'});
+
+  const cursor = Post.findById(id);
+
+  cursor.then(post => {
+    if (!post) {
+      return res.status(404).json({error: 'Post not found'});
+    }
+
+    cursor
+      .populate('comments')
+      .populate({
+        path: 'comments',
+        populate: {path: 'author'},
+      })
+      .populate('author')
+      .exec((err, post) => {
+        if (err) return console.log(err);
+
+        res.json(post);
+      });
+  });
+});
+
 // POST api/posts/create
 router.post('/create', (req, res) => {
-  const {authorId, title, body} = req.body;
+  const {title, body} = req.body;
+  const {_id} = req.user;
+
+  if (!_id || !isIdValid(_id) || !title || !body)
+    return res.status(400).send({error: 'Not all information sent'});
 
   const newPost = new Post({
-    author: authorId,
+    author: _id,
     title,
     body,
   });
 
   newPost
     .save()
-    .then(user => res.json(user))
+    .then(post => res.json(post))
     .catch(err => console.log(err.message));
 });
 

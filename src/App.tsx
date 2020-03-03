@@ -10,6 +10,7 @@ import LoggedOutRoute from './components/LoggedOutRoute/LoggedOutRoute';
 import Profile from './components/Profile/Profile';
 import Container from '@material-ui/core/Container';
 import Home from './components/Home/Home';
+import Post from './components/Post/Post';
 
 const App: FC = () => {
   return (
@@ -26,6 +27,14 @@ const App: FC = () => {
             <Error />
           </Route>
 
+          <Route path="/post/:postId">
+            <Post />
+          </Route>
+
+          <Route path="/user/:username">
+            <Profile />
+          </Route>
+
           <LoggedOutRoute path="/login">
             <Login />
           </LoggedOutRoute>
@@ -33,10 +42,6 @@ const App: FC = () => {
           <LoggedOutRoute path="/register">
             <Register />
           </LoggedOutRoute>
-
-          <LoggedInRoute path="/profile">
-            <Profile />
-          </LoggedInRoute>
         </Switch>
       </Container>
     </div>

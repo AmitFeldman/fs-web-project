@@ -29,8 +29,8 @@ const getMe = async (): Promise<User> => {
   return await client<{}, User>('users/me');
 };
 
-const findUserById = async (id: User['_id']): Promise<User> => {
-  return await client<{}, User>(`users/id/${id}`);
+const getUserByUsername = async (username: User['username']): Promise<User> => {
+  return await client<{}, User>(`users/username/${username}`);
 };
 
-export {register, login, findUserById, getMe};
+export {register, login, getUserByUsername, getMe};

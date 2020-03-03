@@ -16,14 +16,14 @@ router.get('/me', (req, res) => {
   res.json(user);
 });
 
-// GET api/users/id/:id
-router.get('/id/:id', (req, res) => {
-  const {id} = req.params;
+// GET api/users/username/:username
+router.get('/username/:username', (req, res) => {
+  const {username} = req.params;
 
-  if (!isIdValid(id))
+  if (!username)
     return res.status(400).send({error: 'Not all information sent'});
 
-  User.findById(id).then(user => {
+  User.findOne({username}).then(user => {
     if (!user) {
       return res.status(404).json({error: 'User not found'});
     }
