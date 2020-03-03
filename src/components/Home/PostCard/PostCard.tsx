@@ -20,7 +20,7 @@ const PostCard: FC<PostCardProps> = ({post}) => {
     <Paper onClick={redirectToPost}>
       <div>{title}</div>
       <div>{body}</div>
-      <UserLink username={author.username} />
+      <UserLink user={author} />
       <div>{comments.length} Comments</div>
     </Paper>
   );

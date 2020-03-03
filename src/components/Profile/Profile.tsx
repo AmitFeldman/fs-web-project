@@ -1,26 +1,38 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useAuth} from '../../context/AuthContext';
-import {useParams} from 'react-router-dom';
+import {useParams, useLocation} from 'react-router-dom';
 import {getUserByUsername, User} from '../../utils/users-api';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Profile: FC = () => {
-  const {user: loggedInUser} = useAuth();
   const {username} = useParams();
+  const {user: loggedInUser} = useAuth();
+  const {state} = useLocation<{user: User}>();
 
   const isUserProfile = username === loggedInUser?.username;
 
-  const [profile, setProfile] = useState<User | null | undefined>(
-    isUserProfile ? loggedInUser : undefined
-  );
+  const getProfile = () => {
+    // Check that requested username is valid string
+    if (typeof username !== 'string' || username === '') return null;
+
+    // If requested username is the logged in user
+    if (isUserProfile) return loggedInUser;
+
+    // If requested username is sent by redirect in location state
+    if (state.user && username === state.user.username) return state.user;
+
+    return undefined;
+  };
+
+  const [profile, setProfile] = useState<User | null | undefined>(getProfile());
 
   useEffect(() => {
-    if (!isUserProfile && username) {
+    if (!profile && username) {
       getUserByUsername(username)
         .then(result => setProfile(result))
         .catch(() => setProfile(null));
     }
-  }, []);
+  }, [username, profile]);
 
   if (profile === null) {
     return <h1>Not a valid username</h1>;

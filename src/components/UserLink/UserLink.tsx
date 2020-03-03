@@ -3,12 +3,16 @@ import {Link, useHistory} from 'react-router-dom';
 import {User} from '../../utils/users-api';
 
 interface UserLinkProps {
-  username: User['username'];
+  user: User;
 }
 
-const UserLink: FC<UserLinkProps> = ({username}) => {
+const UserLink: FC<UserLinkProps> = ({user}) => {
+  const {username} = user;
+
   return (
-    <Link onClick={e => e.stopPropagation()} to={`/user/${username}`}>
+    <Link
+      onClick={e => e.stopPropagation()}
+      to={{pathname: `/user/${username}`, state: {user}}}>
       By {username}
     </Link>
   );

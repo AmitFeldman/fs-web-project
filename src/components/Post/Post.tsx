@@ -5,6 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 import UserLink from '../UserLink/UserLink';
 import Comment from './Comment/Comment';
+import CreateComment from './CreateComment/CreateComment';
 
 const Post: FC = () => {
   const [post, setPost] = useState<PostWithComments | null>();
@@ -18,7 +19,7 @@ const Post: FC = () => {
     }
   }, []);
 
-  if (post === null) {
+  if (postId === undefined || post === null) {
     return <h1>Not a valid id</h1>;
   }
 
@@ -31,9 +32,10 @@ const Post: FC = () => {
   return (
     <>
       <h1>{title}</h1>
-      <UserLink username={author.username} />
+      <UserLink user={author} />
       <h3>{body}</h3>
       <Divider />
+      <CreateComment postId={postId} />
       <br />
       <section>
         {comments.map(comment => (

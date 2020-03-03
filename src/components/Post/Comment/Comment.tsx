@@ -13,7 +13,7 @@ const Comment: FC<CommentProps> = ({commentItem}) => {
   return (
     <Paper>
       <div>{comment}</div>
-      <UserLink username={author.username} />
+      <UserLink user={author} />
     </Paper>
   );
 };
