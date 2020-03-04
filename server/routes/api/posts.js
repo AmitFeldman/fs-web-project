@@ -1,6 +1,8 @@
 import {Router} from 'express';
 import Post from '../../models/Post';
 import {isIdValid} from '../../utils/validation';
+import {isLoggedIn} from '../../middlewares/auth';
+import {onNewPost} from '../../utils/changes-listener';
 
 const router = new Router();
 
@@ -44,7 +46,7 @@ router.get('/id/:id', (req, res) => {
 });
 
 // POST api/posts/create
-router.post('/create', (req, res) => {
+router.post('/create', isLoggedIn, (req, res) => {
   const {title, body} = req.body;
   const {_id} = req.user;
 
@@ -59,7 +61,10 @@ router.post('/create', (req, res) => {
 
   newPost
     .save()
-    .then(post => res.json(post))
+    .then(post => {
+      onNewPost(post);
+      return res.json(post);
+    })
     .catch(err => console.log(err.message));
 });
 

@@ -6,6 +6,7 @@ import Divider from '@material-ui/core/Divider';
 import UserLink from '../UserLink/UserLink';
 import Comment from './Comment/Comment';
 import CreateComment from './CreateComment/CreateComment';
+import {sortByDescendingDate} from '../../utils/date-helper';
 
 const Post: FC = () => {
   const [post, setPost] = useState<PostWithComments | null>();
@@ -38,7 +39,7 @@ const Post: FC = () => {
       <CreateComment postId={postId} />
       <br />
       <section>
-        {comments.map(comment => (
+        {comments.sort(sortByDescendingDate).map(comment => (
           <Comment key={comment._id} commentItem={comment} />
         ))}
       </section>

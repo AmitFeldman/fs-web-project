@@ -50,6 +50,8 @@ const Profile: FC = () => {
       <div>Username: {username}</div>
       <div>Email: {email}</div>
       {isAdmin && <div>This user is an admin.</div>}
+
+      <h1>User Activity</h1>
     </div>
   );
 };

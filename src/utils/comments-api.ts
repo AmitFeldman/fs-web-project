@@ -1,8 +1,8 @@
 import {User} from './users-api';
 import client from './api-client';
+import {BasicType} from '../types/basic-type';
 
-export interface CommentItem {
-  _id: string;
+export interface CommentItem extends BasicType {
   author: User;
   post: string;
   comment: string;

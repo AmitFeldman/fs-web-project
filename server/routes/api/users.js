@@ -50,6 +50,7 @@ router.post('/register', async (req, res) => {
   const newUser = new User({
     username,
     password,
+    email,
     isAdmin: false,
   });
 

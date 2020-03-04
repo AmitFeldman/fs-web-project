@@ -1,8 +1,9 @@
 import EventEmitter from 'eventemitter3';
 
 let io;
-class ioEventEmitter extends EventEmitter {}
+class IoEventEmitter extends EventEmitter {}
 
+const ioEventEmitter = new IoEventEmitter();
 const connectEvent = 'connection';
 const disconnectEvent = 'disconnect';
 

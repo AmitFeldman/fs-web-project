@@ -1,7 +1,7 @@
 import client from './api-client';
+import {BasicType} from '../types/basic-type';
 
-export interface User {
-  _id: string;
+export interface User extends BasicType {
   username: string;
   password: string;
   email: string;

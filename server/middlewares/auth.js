@@ -28,4 +28,13 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-export {parseToken, isAdmin};
+const isLoggedIn = (req, res, next) => {
+  const {user} = req;
+  if (!user) {
+    return res.status(401).json({error: 'User is not logged in'});
+  }
+
+  next();
+};
+
+export {parseToken, isAdmin, isLoggedIn};
