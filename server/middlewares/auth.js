@@ -28,4 +28,4 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-export {parseToken};
+export {parseToken, isAdmin};

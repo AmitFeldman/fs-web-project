@@ -19,7 +19,7 @@ const Profile: FC = () => {
     if (isUserProfile) return loggedInUser;
 
     // If requested username is sent by redirect in location state
-    if (state.user && username === state.user.username) return state.user;
+    if (username === state?.user?.username) return state.user;
 
     return undefined;
   };
