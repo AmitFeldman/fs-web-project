@@ -5,10 +5,9 @@ const express = {
   socketPort: 80,
 };
 
-// TODO: Add Mongo Password
 const mongo = {
-  user: 'alon',
-  host: 'alon.documents.azure.com',
+  user: 'alon2',
+  host: 'alon2.documents.azure.com',
   port: '10255',
   database: 'fs-project',
   password: secrets.mongoPassword,
