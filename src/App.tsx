@@ -2,7 +2,6 @@ import React, {FC} from 'react';
 import './App.css';
 import {Route, Switch} from 'react-router-dom';
 import Login from './components/Login/Login';
-import LoggedInRoute from './components/LoggedInRoute/LoggedInRoute';
 import NavBar from './components/NavBar/NavBar';
 import Error from './components/Error/Error';
 import Register from './components/Register/Register';
@@ -11,11 +10,16 @@ import Profile from './components/Profile/Profile';
 import Container from '@material-ui/core/Container';
 import Home from './components/Home/Home';
 import Post from './components/Post/Post';
+import ScrollTop from './components/ScrollTop/ScrollTop';
+
+const ANCHOR = 'back-to-top-anchor';
 
 const App: FC = () => {
   return (
     <div className="App">
-      <NavBar />
+      <div id={ANCHOR}>
+        <NavBar />
+      </div>
 
       <Container className="Container">
         <Switch>
@@ -44,6 +48,8 @@ const App: FC = () => {
           </LoggedOutRoute>
         </Switch>
       </Container>
+
+      <ScrollTop anchorId={ANCHOR} />
     </div>
   );
 };
