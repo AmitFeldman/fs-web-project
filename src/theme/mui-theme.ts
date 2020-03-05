@@ -1,6 +1,10 @@
 import {createMuiTheme} from '@material-ui/core/styles';
 
 // Application Theme
-const theme = createMuiTheme({});
+const theme = createMuiTheme({
+  typography: {
+    fontFamily: 'Ubuntu',
+  },
+});
 
 export default theme;

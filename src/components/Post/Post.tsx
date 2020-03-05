@@ -2,11 +2,13 @@ import React, {FC, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {getPostById, PostWithComments} from '../../utils/posts-api';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import UserLink from '../UserLink/UserLink';
 import Comment from './Comment/Comment';
 import CreateComment from './CreateComment/CreateComment';
-import {sortByDescendingDate} from '../../utils/date-helper';
+import {formatDate, sortByDescendingDate} from '../../utils/date-helper';
 
 const Post: FC = () => {
   const [post, setPost] = useState<PostWithComments | null>();
@@ -28,20 +30,38 @@ const Post: FC = () => {
     return <CircularProgress />;
   }
 
-  const {author, body, comments, title} = post;
+  const {author, body, comments, title, date} = post;
 
   return (
     <>
-      <h1>{title}</h1>
-      <UserLink user={author} />
-      <h3>{body}</h3>
+      <Typography variant="h2">{title}</Typography>
+      <Typography variant="caption">
+        Submitted {formatDate(date)} by{' '}
+        <UserLink user={author}>
+          <Typography variant="caption">{author.username}</Typography>
+        </UserLink>
+      </Typography>
       <Divider />
+
+      <Typography variant="body1">{body}</Typography>
+      <Divider />
+      <br />
+
       <CreateComment postId={postId} />
       <br />
+
       <section>
-        {comments.sort(sortByDescendingDate).map(comment => (
-          <Comment key={comment._id} commentItem={comment} />
-        ))}
+        <Typography variant="h5">Comments:</Typography>
+        <Divider />
+        <br />
+
+        <Grid container direction="column" spacing={2}>
+          {comments.sort(sortByDescendingDate).map(comment => (
+            <Grid item>
+              <Comment key={comment._id} commentItem={comment} />
+            </Grid>
+          ))}
+        </Grid>
       </section>
     </>
   );

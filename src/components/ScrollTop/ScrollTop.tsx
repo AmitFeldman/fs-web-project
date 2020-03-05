@@ -38,11 +38,11 @@ const ScrollTop: FC<ScrollTopProps> = ({anchorId, children}) => {
 
   return (
     <Zoom in={trigger}>
-      <div onClick={handleClick} role="presentation" className={root}>
+      <aside onClick={handleClick} role="presentation" className={root}>
         <Fab color="secondary" size="small">
           <KeyboardArrowUp />
         </Fab>
-      </div>
+      </aside>
     </Zoom>
   );
 };

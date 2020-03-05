@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       position: 'relative',
+      width: '80%',
     },
     inputContainer: {
       margin: 0,

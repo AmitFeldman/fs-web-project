@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import './App.css';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Switch, Redirect} from 'react-router-dom';
 import Login from './components/Login/Login';
 import NavBar from './components/NavBar/NavBar';
 import Error from './components/Error/Error';
@@ -46,6 +46,8 @@ const App: FC = () => {
           <LoggedOutRoute path="/register">
             <Register />
           </LoggedOutRoute>
+
+          <Redirect from="*" to="/error" />
         </Switch>
       </Container>
 

@@ -25,9 +25,15 @@ const PostList: FC = () => {
   }, []);
 
   return (
-    <Grid container direction="column" spacing={2} alignItems="center">
+    <Grid
+      container
+      direction="column"
+      spacing={2}
+      alignItems="stretch"
+      justify="center"
+      xs={12}>
       {posts.sort(sortByDescendingDate).map(post => (
-        <Grid item key={post._id}>
+        <Grid item key={post._id} xs={12}>
           <PostCard post={post} />
         </Grid>
       ))}

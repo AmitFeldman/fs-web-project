@@ -1,25 +1,25 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useAuth} from '../../context/AuthContext';
-import {useParams, useLocation} from 'react-router-dom';
+import {useParams, Redirect} from 'react-router-dom';
 import {getUserByUsername, User} from '../../utils/users-api';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {useUserLocation} from '../UserLink/UserLink';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 const Profile: FC = () => {
   const {username} = useParams();
   const {user: loggedInUser} = useAuth();
-  const {state} = useLocation<{user: User}>();
+  // If UserLink component redirected user to this route
+  const locationUser = useUserLocation();
 
   const isUserProfile = username === loggedInUser?.username;
 
   const getProfile = () => {
-    // Check that requested username is valid string
-    if (typeof username !== 'string' || username === '') return null;
-
     // If requested username is the logged in user
     if (isUserProfile) return loggedInUser;
 
-    // If requested username is sent by redirect in location state
-    if (username === state?.user?.username) return state.user;
+    if (locationUser) return locationUser;
 
     return undefined;
   };
@@ -27,7 +27,7 @@ const Profile: FC = () => {
   const [profile, setProfile] = useState<User | null | undefined>(getProfile());
 
   useEffect(() => {
-    if (!profile && username) {
+    if (!profile && profile !== null && username) {
       getUserByUsername(username)
         .then(result => setProfile(result))
         .catch(() => setProfile(null));
@@ -35,7 +35,14 @@ const Profile: FC = () => {
   }, [username, profile]);
 
   if (profile === null) {
-    return <h1>Not a valid username</h1>;
+    return (
+      <Redirect
+        to={{
+          pathname: '/error',
+          state: {error: 'This user does not exist!'},
+        }}
+      />
+    );
   }
 
   if (profile === undefined) {
@@ -46,12 +53,21 @@ const Profile: FC = () => {
 
   return (
     <div>
-      {isUserProfile && <h1>This is me!</h1>}
-      <div>Username: {username}</div>
-      <div>Email: {email}</div>
-      {isAdmin && <div>This user is an admin.</div>}
+      <Typography variant="h4">User Information</Typography>
+      <Divider />
+      <br />
 
-      <h1>User Activity</h1>
+      <Typography variant="body1">Username: {username}</Typography>
+      <Typography variant="body1">Email: {email}</Typography>
+      {isAdmin && (
+        <Typography variant="body1">This user is an admin.</Typography>
+      )}
+
+      <br />
+      <Typography variant="h4">User Activity</Typography>
+      <Divider />
+
+      <Typography> ADD USER ACTIVITY</Typography>
     </div>
   );
 };
