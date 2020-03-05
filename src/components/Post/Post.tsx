@@ -20,7 +20,7 @@ const Post: FC = () => {
         .then(result => setPost(result))
         .catch(err => setPost(null));
     }
-  }, []);
+  }, [postId]);
 
   if (postId === undefined || post === null) {
     return <h1>Not a valid id</h1>;

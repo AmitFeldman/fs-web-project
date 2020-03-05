@@ -30,8 +30,7 @@ const PostList: FC = () => {
       direction="column"
       spacing={2}
       alignItems="stretch"
-      justify="center"
-      xs={12}>
+      justify="center">
       {posts.sort(sortByDescendingDate).map(post => (
         <Grid item key={post._id} xs={12}>
           <PostCard post={post} />
