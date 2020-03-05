@@ -1,16 +1,40 @@
 import React, {FC} from 'react';
-import Post from './Post';
+import CreatePost from './CreatePost/CreatePost';
+import PostList from './PostList/PostList';
+import Grid from '@material-ui/core/Grid';
+import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    header: {
+      textShadow: `1.5px 1.5px ${theme.palette.text.hint}`,
+    },
+    container: {
+      width: '80%',
+    },
+  })
+);
 
 const Home: FC = () => {
+  const {header, container} = useStyles();
+
   return (
-    <div className="container">
-      <div className="row pt-5">
-        <div className="col-12 col-lg-6 offset-lg-3">
-          <h1 className="text-center">LightBlog</h1>
-        </div>
-        <Post />
-      </div>
-    </div>
+    <Grid container direction="column" spacing={2} alignItems="center">
+      <Grid item xs={12} className={container}>
+        <CreatePost />
+      </Grid>
+      <Grid item xs={12} className={container}>
+        <Typography variant="h4" className={header}>
+          Latest Posts
+        </Typography>
+        <Divider />
+      </Grid>
+      <Grid item xs={8}>
+        <PostList />
+      </Grid>
+    </Grid>
   );
 };
 

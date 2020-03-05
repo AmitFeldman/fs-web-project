@@ -3,7 +3,12 @@ Application using the MERN stack. This repo contains both the front and back-end
 Front-end is a client written in Typescript and React. 
 Back-end is an express node server that maintains an HTTP (Rest API) and Socket.IO endpoint.  
 
-In order to run the server add your mongo password to `server/config/config.js`.<br />
+In order to run the server create the file `secrets.js` in `server/config`. It should look like this:<br />
+```
+export default {
+  mongoPassword: 'YOUR_MONGO_PASSWORD'
+};
+```
 ***REMINDER: Do not push your mongo password or other sensitive data to the repo.***
 
 ## Available Scripts

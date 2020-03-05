@@ -2,11 +2,14 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import {express as expressConfig, mongo} from './config/config';
-import users from './routes/api/users';
 import socketIO from 'socket.io';
 import http from 'http';
 import cors from 'cors';
 import {initSocketIO} from "./utils/socket-service";
+import users from './routes/api/users';
+import posts from './routes/api/posts';
+import comments from './routes/api/comments';
+import {parseToken} from "./middlewares/auth";
 
 const app = express();
 
@@ -21,8 +24,13 @@ app.use(
 );
 app.use(bodyParser.json());
 
+// Token parsing middleware
+app.use(parseToken);
+
 // Routes
 app.use("/api/users", users);
+app.use("/api/posts", posts);
+app.use("/api/comments", comments);
 
 // Connect to MongoDB
 console.log(`connecting to MongoDB through uri ${mongo.mongoURI}...`);

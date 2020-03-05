@@ -1,5 +1,10 @@
 import React, {createContext, useState, FC, useEffect, useContext} from 'react';
-import {removeToken, setToken, getUser} from '../utils/auth-client';
+import {
+  removeToken,
+  setToken,
+  getUser,
+  getLocalUser,
+} from '../utils/auth-client';
 import * as usersApi from '../utils/users-api';
 import {LoginBody, RegisterBody, User} from '../utils/users-api';
 
@@ -40,7 +45,7 @@ const AuthContext = createContext<AuthContextData>({
 });
 
 const AuthProvider: FC<any> = props => {
-  const [user, setUser] = useState<OptionalUser>(null);
+  const [user, setUser] = useState<OptionalUser>(getLocalUser());
   const userStatus = getUserStatus(user);
 
   const reloadUser = () => {

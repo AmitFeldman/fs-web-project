@@ -51,7 +51,10 @@ const UserToolbar: FC<UserToolbarProps> = ({user, logout}) => {
         open={Boolean(userMenuAnchor)}
         keepMounted
         onClose={closeUserMenu}>
-        <MenuItem component={RouterLink} to="/profile" onClick={closeUserMenu}>
+        <MenuItem
+          component={RouterLink}
+          to={`/user/${user?.username}`}
+          onClick={closeUserMenu}>
           Profile
         </MenuItem>
         <MenuItem onClick={() => logout().then(closeUserMenu)}>Logout</MenuItem>

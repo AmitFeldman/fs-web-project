@@ -24,18 +24,24 @@ const Login: FC = () => {
   const {login} = useAuth();
   const {root} = useStyles();
 
-  const [email, setEmail] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const loginFields: LoginField[] = [
-    {label: 'Email', setValue: setEmail, value: email},
+    {label: 'Username', setValue: setUsername, value: username},
     {label: 'Password', setValue: setPassword, value: password},
   ];
 
+  const loginUser = () => {
+    login({username, password}).catch(err => {
+      console.log(err);
+    });
+  };
+
   return (
     <Grid container className={root} direction="column" spacing={3}>
-      {loginFields.map(({value, setValue, label}) => (
-        <Grid item>
+      {loginFields.map(({value, setValue, label}, index) => (
+        <Grid item key={index}>
           <TextField
             value={value}
             onChange={({target}: ChangeEvent<HTMLInputElement>) =>
@@ -47,12 +53,7 @@ const Login: FC = () => {
         </Grid>
       ))}
       <Grid item>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            login({email, password});
-          }}>
+        <Button variant="contained" color="primary" onClick={loginUser}>
           Login
         </Button>
       </Grid>

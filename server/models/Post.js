@@ -1,29 +1,26 @@
 import {Schema, model} from 'mongoose';
-import User from './User';
 
 const PostSchema = new Schema({
-  comments: {
-    type: [Comment],
-    required: true
-  },
   author: {
-    type: User,
-    required: true
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'users',
   },
   title: {
     type: String,
-    required: true
+    required: true,
   },
   body: {
     type: String,
-    required: true
+    required: true,
   },
+  comments: [{type: Schema.Types.ObjectId, ref: 'comments'}],
   date: {
     type: Date,
-    required: true
-  }
+    default: Date.now,
+  },
 });
 
-const Post = model("users", PostSchema);
+const Post = model('posts', PostSchema);
 
 export default Post;

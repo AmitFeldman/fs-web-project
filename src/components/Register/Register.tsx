@@ -36,8 +36,8 @@ const Login: FC = () => {
 
   return (
     <Grid container className={root} direction="column" spacing={3}>
-      {loginFields.map(({value, setValue, label}) => (
-        <Grid item>
+      {loginFields.map(({value, setValue, label}, index) => (
+        <Grid item key={index}>
           <TextField
             value={value}
             onChange={({target}: ChangeEvent<HTMLInputElement>) =>
