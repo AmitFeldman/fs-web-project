@@ -14,7 +14,7 @@ export default {
 ## Available Scripts
 In the project directory, you can run:
 
-- ### `npm start`
+### `npm start`
 
 Runs both the client and server concurrently<br />
 Open [http://localhost:3000](http://localhost:3000) to view the client in the browser.<br />
@@ -25,11 +25,11 @@ The page will reload if you make edits in the client.<br />
 You will also see any lint errors in the console.<br />
 `npm start:dev` - Server will also reload on edits.
 
-- ### `npm run client`
+### `npm run client`
 
 Run only the client.<br />
 
-- ### `npm run server`
+### `npm run server`
 
 Run only the server.<br />
 `npm run server:dev` - Server reloads on edits.<br />
