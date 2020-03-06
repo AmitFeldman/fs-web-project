@@ -39,7 +39,11 @@ const PostCard: FC<PostCardProps> = ({post}) => {
     <Box maxWidth="100%">
       <Paper className={paper}>
         <header>
-          <Typography onClick={redirectToPost} className={header} variant="h4">
+          <Typography
+            noWrap
+            onClick={redirectToPost}
+            className={header}
+            variant="h4">
             {title}
           </Typography>
         </header>
