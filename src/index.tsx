@@ -7,12 +7,15 @@ import {AuthProvider} from './context/AuthContext';
 import {BrowserRouter} from 'react-router-dom';
 import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import theme from './theme/mui-theme';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 ReactDOM.render(
   <AuthProvider>
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <App />
+        <CssBaseline>
+          <App />
+        </CssBaseline>
       </ThemeProvider>
     </BrowserRouter>
   </AuthProvider>,
