@@ -17,7 +17,6 @@ import {
 } from 'react-share';
 
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
-import {ReactComponent} from '*.svg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

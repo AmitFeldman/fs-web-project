@@ -2,6 +2,7 @@
 
 # Secret
 secrets.js
+secrets.ts
 
 # dependencies
 /node_modules

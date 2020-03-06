@@ -13,7 +13,7 @@ const Logo: FC = () => {
     }
   }, [canvas]);
 
-  return <canvas ref={canvas} height="32px" width="74px" />;
+  return <canvas ref={canvas} height="32px" width="73px" />;
 };
 
 export default Logo;

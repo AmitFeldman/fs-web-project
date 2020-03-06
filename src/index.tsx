@@ -8,6 +8,7 @@ import {BrowserRouter} from 'react-router-dom';
 import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import theme from './theme/mui-theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import {initArticles} from './utils/news-api';
 
 ReactDOM.render(
   <AuthProvider>
@@ -21,6 +22,9 @@ ReactDOM.render(
   </AuthProvider>,
   document.getElementById('root')
 );
+
+// Init news api
+initArticles();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

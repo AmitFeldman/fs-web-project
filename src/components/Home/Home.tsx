@@ -10,6 +10,8 @@ import {useAuth} from '../../context/AuthContext';
 import {useAsync} from 'react-async';
 import {onSocketEvent} from '../../utils/socket-client';
 import Button from '@material-ui/core/Button';
+import Modal from '@material-ui/core/Modal';
+import NewsCard from '../NewsCard/NewsCard';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,6 +24,10 @@ const useStyles = makeStyles((theme: Theme) =>
     newPostsButton: {
       float: 'right',
     },
+    modal: {
+      width: '50%',
+      margin: 'auto',
+    },
   })
 );
 
@@ -29,8 +35,9 @@ const Home: FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPosts, setNewPosts] = useState<BasicPost[]>([]);
   const {user} = useAuth();
+  const [helpOpen, setHelpOpen] = useState(false);
 
-  const {header, container, newPostsButton} = useStyles();
+  const {header, container, newPostsButton, modal} = useStyles();
 
   useAsync(getPosts, {onResolve: result => setPosts(result)});
 
@@ -56,34 +63,47 @@ const Home: FC = () => {
   };
 
   return (
-    <Grid container direction="column" spacing={2} alignItems="center">
-      <Grid item xs={12} className={container}>
-        <CreatePost
-          onCreatePost={newPost => {
-            setPosts(currPosts => [newPost, ...currPosts]);
-          }}
-        />
+    <>
+      <Grid container direction="column" spacing={2} alignItems="center">
+        <Grid item xs={12} className={container}>
+          <CreatePost
+            onCreatePost={newPost => {
+              setPosts(currPosts => [newPost, ...currPosts]);
+            }}
+            onHelpClick={() => setHelpOpen(true)}
+          />
+        </Grid>
+        <Grid item xs={12} className={container}>
+          <Typography variant="h4" className={header}>
+            Latest Posts{' '}
+            {newPosts.length > 0 && (
+              <Button
+                className={newPostsButton}
+                variant="contained"
+                color="secondary"
+                onClick={showNewPosts}
+                size="small">
+                Show {newPosts.length} New Post{newPosts.length > 1 && 's'}
+              </Button>
+            )}
+          </Typography>
+          <Divider />
+        </Grid>
+        <Grid item xs={8}>
+          <PostList posts={posts} />
+        </Grid>
       </Grid>
-      <Grid item xs={12} className={container}>
-        <Typography variant="h4" className={header}>
-          Latest Posts{' '}
-          {newPosts.length > 0 && (
-            <Button
-              className={newPostsButton}
-              variant="contained"
-              color="secondary"
-              onClick={showNewPosts}
-              size="small">
-              Show {newPosts.length} New Post{newPosts.length > 1 && 's'}
-            </Button>
-          )}
-        </Typography>
-        <Divider />
-      </Grid>
-      <Grid item xs={8}>
-        <PostList posts={posts} />
-      </Grid>
-    </Grid>
+
+      <Modal
+        open={helpOpen}
+        onClose={() => setHelpOpen(false)}
+        style={{top: '10vh'}}
+        className={modal}>
+        <section>
+          <NewsCard />
+        </section>
+      </Modal>
+    </>
   );
 };
 

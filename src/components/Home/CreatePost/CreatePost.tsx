@@ -7,6 +7,8 @@ import Fab from '@material-ui/core/Fab';
 import {Create} from '@material-ui/icons';
 import {createPost, Post} from '../../../utils/posts-api';
 import {useAuth} from '../../../context/AuthContext';
+import {HelpOutline} from '@material-ui/icons';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,20 +25,26 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     fab: {
       position: 'absolute',
-      right: '1%',
       bottom: '5%',
+    },
+    rightFab: {
+      right: '1%',
+    },
+    leftFab: {
+      left: '1%',
     },
   })
 );
 
 interface CreatePostProps {
   onCreatePost: (newPost: Post) => void;
+  onHelpClick: () => void;
 }
 
-const CreatePost: FC<CreatePostProps> = ({onCreatePost}) => {
+const CreatePost: FC<CreatePostProps> = ({onCreatePost, onHelpClick}) => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const {input, inputContainer, root, fab} = useStyles();
+  const {input, inputContainer, root, fab, leftFab, rightFab} = useStyles();
   const {user} = useAuth();
 
   const clearForm = () => {
@@ -93,14 +101,25 @@ const CreatePost: FC<CreatePostProps> = ({onCreatePost}) => {
           />
         </Grid>
         <Grid item>
-          <Fab
-            className={fab}
-            color="primary"
-            variant="extended"
-            onClick={submitPost}>
-            <Create />
-            Post
-          </Fab>
+          <>
+            <Tooltip title="Don't know what to post about?">
+              <Fab
+                size="small"
+                color="secondary"
+                onClick={onHelpClick}
+                className={`${fab} ${leftFab}`}>
+                <HelpOutline />
+              </Fab>
+            </Tooltip>
+            <Fab
+              className={`${fab} ${rightFab}`}
+              color="primary"
+              variant="extended"
+              onClick={submitPost}>
+              <Create />
+              Post
+            </Fab>
+          </>
         </Grid>
       </Grid>
     </Paper>
