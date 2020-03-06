@@ -3,22 +3,31 @@ import {User} from './users-api';
 import {CommentItem} from './comments-api';
 import {BasicType} from '../types/basic-type';
 
-interface PostData extends BasicType {
+export interface Post extends BasicType {
   author: User;
   title: string;
   body: string;
-}
-
-export interface Post extends PostData {
   comments: string[];
 }
 
-export interface PostWithComments extends PostData {
+export interface BasicPost extends Omit<Post, 'author'> {
+  author: string;
+}
+
+export interface PostWithComments extends Omit<Post, 'comments'> {
   comments: CommentItem[];
 }
 
 const getPosts = async (): Promise<Post[]> => {
   return await client<{}, Post[]>('posts');
+};
+
+type IdArray = Post['_id'][];
+
+const getPostsByIds = async (...ids: IdArray): Promise<Post[]> => {
+  return await client<{ids: IdArray}, Post[]>('posts/ids', {
+    body: {ids},
+  });
 };
 
 const getPostById = async (id: Post['_id']): Promise<PostWithComments> => {
@@ -33,4 +42,4 @@ const createPost = async (createPostData: CreatePostBody): Promise<Post> => {
   });
 };
 
-export {getPosts, createPost, getPostById};
+export {getPosts, createPost, getPostById, getPostsByIds};

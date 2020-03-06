@@ -5,7 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import {Create} from '@material-ui/icons';
-import {createComment} from '../../../utils/comments-api';
+import {CommentItem, createComment} from '../../../utils/comments-api';
+import {useAuth} from '../../../context/AuthContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,14 +32,33 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface CreateCommentProps {
   postId: string;
+  onCreateComment: (newComment: CommentItem) => void;
 }
 
-const CreateComment: FC<CreateCommentProps> = ({postId}) => {
+const CreateComment: FC<CreateCommentProps> = ({postId, onCreateComment}) => {
   const [comment, setComment] = useState('');
   const {input, inputContainer, root, fab} = useStyles();
+  const {user} = useAuth();
 
   const clearForm = () => {
     setComment('');
+  };
+
+  const submitComment = async () => {
+    if (user) {
+      try {
+        const newComment = await createComment({comment, postId});
+        onCreateComment({
+          ...newComment,
+          author: user,
+        });
+        clearForm();
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log('not logged in');
+    }
   };
 
   return (
@@ -53,6 +73,7 @@ const CreateComment: FC<CreateCommentProps> = ({postId}) => {
         <Grid item>
           <TextField
             value={comment}
+            placeholder="Anything to add to the conversation?"
             className={input}
             variant="outlined"
             multiline
@@ -67,7 +88,7 @@ const CreateComment: FC<CreateCommentProps> = ({postId}) => {
             className={fab}
             color="primary"
             variant="extended"
-            onClick={() => createComment({comment, postId}).then(clearForm)}>
+            onClick={submitComment}>
             <Create />
             Comment
           </Fab>

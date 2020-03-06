@@ -3,10 +3,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import {Post} from '../../../utils/posts-api';
 import {useHistory} from 'react-router-dom';
-import UserLink from '../../UserLink/UserLink';
-import {formatDate} from '../../../utils/date-helper';
 import Box from '@material-ui/core/Box';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import DataFooter from '../../DataFooter/DataFooter';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,7 +39,11 @@ const PostCard: FC<PostCardProps> = ({post}) => {
     <Box maxWidth="100%">
       <Paper className={paper}>
         <header>
-          <Typography onClick={redirectToPost} className={header} variant="h4">
+          <Typography
+            noWrap
+            onClick={redirectToPost}
+            className={header}
+            variant="h4">
             {title}
           </Typography>
         </header>
@@ -53,12 +56,7 @@ const PostCard: FC<PostCardProps> = ({post}) => {
         </section>
 
         <footer>
-          <Typography variant="caption">
-            Submitted {formatDate(date)} by{' '}
-            <UserLink user={author}>
-              <Typography variant="caption">{author.username}</Typography>
-            </UserLink>
-          </Typography>
+          <DataFooter user={author} date={date} />
         </footer>
       </Paper>
     </Box>

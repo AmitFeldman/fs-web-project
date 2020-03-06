@@ -1,29 +1,14 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {FC} from 'react';
 import Grid from '@material-ui/core/Grid';
-import {Post, getPosts} from '../../../utils/posts-api';
+import {Post} from '../../../utils/posts-api';
 import PostCard from '../PostCard/PostCard';
-import {onSocketEvent} from '../../../utils/socket-client';
 import {sortByDescendingDate} from '../../../utils/date-helper';
 
-const PostList: FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+interface PostListProps {
+  posts: Post[];
+}
 
-  useEffect(() => {
-    getPosts().then(result => {
-      setPosts(result);
-    });
-  }, []);
-
-  useEffect(() => {
-    const cancelOnSocketEvent = onSocketEvent<Post>('NEW_POST', newPost => {
-      setPosts(currPosts => [newPost, ...currPosts]);
-    });
-
-    return () => {
-      cancelOnSocketEvent();
-    };
-  }, []);
-
+const PostList: FC<PostListProps> = ({posts}) => {
   return (
     <Grid
       container

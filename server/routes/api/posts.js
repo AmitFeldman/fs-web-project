@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import {Router} from 'express';
 import Post from '../../models/Post';
 import {isIdValid} from '../../utils/validation';
@@ -9,6 +10,23 @@ const router = new Router();
 // GET api/posts
 router.get('', (req, res) => {
   Post.find()
+    .populate('author')
+    .exec((err, posts) => {
+      if (err) return console.log(err);
+
+      res.json(posts);
+    });
+});
+
+// GET api/posts/ids
+router.post('/ids', (req, res) => {
+  const {ids = []} = req.body;
+
+  const mappedIds = ids.map(id => mongoose.Types.ObjectId(id));
+
+  Post.find({
+    _id: {$in: mappedIds},
+  })
     .populate('author')
     .exec((err, posts) => {
       if (err) return console.log(err);
