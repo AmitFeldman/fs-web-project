@@ -57,8 +57,8 @@ const Post: FC = () => {
 
         <Grid container direction="column" spacing={2}>
           {comments.sort(sortByDescendingDate).map(comment => (
-            <Grid item>
-              <Comment key={comment._id} commentItem={comment} />
+            <Grid item key={comment._id}>
+              <Comment commentItem={comment} />
             </Grid>
           ))}
         </Grid>
