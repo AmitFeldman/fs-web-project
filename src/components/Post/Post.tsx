@@ -3,12 +3,53 @@ import {useParams} from 'react-router-dom';
 import {getPostById, PostWithComments} from '../../utils/posts-api';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import Comment from './Comment/Comment';
 import CreateComment from './CreateComment/CreateComment';
-import {sortByDescendingDate} from '../../utils/date-helper';
 import DataFooter from '../DataFooter/DataFooter';
+import CommentList from './CommentList/CommentList';
+import {
+  TwitterShareButton,
+  TwitterIcon,
+  FacebookIcon,
+  FacebookShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
+} from 'react-share';
+
+import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import {ReactComponent} from '*.svg';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    button: {
+      float: 'right',
+    },
+    icon: {
+      borderRadius: '35px',
+      width: '35px',
+      height: '35px',
+    },
+  })
+);
+
+interface ShareButtonProps {
+  button: any;
+  icon: any;
+}
+
+const ShareButton: FC<ShareButtonProps> = ({button: Button, icon: Icon}) => {
+  const {button, icon} = useStyles();
+
+  return (
+    <Button
+      style={{padding: 4}}
+      className={button}
+      title="Check out this post! "
+      url={window.location.href}>
+      <Icon className={icon} />
+    </Button>
+  );
+};
 
 const Post: FC = () => {
   const [post, setPost] = useState<PostWithComments | null>();
@@ -34,11 +75,15 @@ const Post: FC = () => {
 
   return (
     <>
-      <Typography variant="h2">{title}</Typography>
+      <Typography noWrap variant="h2">
+        {title}
+      </Typography>
       <DataFooter user={author} date={date} />
       <Divider />
 
-      <Typography variant="body1">{body}</Typography>
+      <Typography paragraph variant="body1">
+        {body}
+      </Typography>
       <Divider />
       <br />
 
@@ -59,17 +104,16 @@ const Post: FC = () => {
       <br />
 
       <section>
-        <Typography variant="h6">{comments.length} Comments</Typography>
+        <Typography variant="h6">
+          {comments.length} Comments
+          <ShareButton button={WhatsappShareButton} icon={WhatsappIcon} />
+          <ShareButton button={FacebookShareButton} icon={FacebookIcon} />
+          <ShareButton button={TwitterShareButton} icon={TwitterIcon} />
+        </Typography>
         <Divider />
         <br />
 
-        <Grid container direction="column" spacing={2}>
-          {comments.sort(sortByDescendingDate).map(comment => (
-            <Grid item key={comment._id}>
-              <Comment commentItem={comment} />
-            </Grid>
-          ))}
-        </Grid>
+        <CommentList comments={comments} />
       </section>
     </>
   );

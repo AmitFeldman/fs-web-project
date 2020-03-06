@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {makeStyles, createStyles, Theme} from '@material-ui/core/styles';
 import UserToolbar from './UserToolbar/UserToolbar';
+import Logo from '../Logo/Logo';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,7 +39,7 @@ const NavBar: FC = () => {
               </Grid>
               <Grid item className={navBarText}>
                 <Button component={RouterLink} color="inherit" to="/">
-                  Home
+                  <Logo />
                 </Button>
               </Grid>
             </Grid>
