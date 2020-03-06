@@ -67,7 +67,7 @@ const CreateComment: FC<CreateCommentProps> = ({postId, onCreateComment}) => {
         container
         className={inputContainer}
         direction="column"
-        spacing={4}
+        spacing={2}
         justify="center"
         alignItems="stretch">
         <Grid item>
