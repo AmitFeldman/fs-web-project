@@ -20,8 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const NewsCard: FC = () => {
-  const article = getArticle();
-  const {author, title, description, url, urlToImage} = article;
+  const {author, title, description, url, urlToImage} = getArticle();
 
   const {root, media} = useStyles();
 

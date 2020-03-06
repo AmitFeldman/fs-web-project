@@ -75,7 +75,7 @@ const CreatePost: FC<CreatePostProps> = ({onCreatePost, onHelpClick}) => {
         container
         className={inputContainer}
         direction="column"
-        spacing={4}
+        spacing={2}
         justify="center"
         alignItems="stretch">
         <Grid item>
