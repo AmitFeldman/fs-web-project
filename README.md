@@ -9,6 +9,13 @@ export default {
   mongoPassword: 'YOUR_MONGO_PASSWORD'
 };
 ```
+We use a [news api](https://newsapi.org/) to shows users popular articles.<br />
+To use the api create the file `secrets.ts` in `src/config`. It should look like this:<br />
+```
+export default {
+  apiKey: 'YOUR_NEWS_API_KEY'
+};
+```
 ***REMINDER: Do not push your mongo password or other sensitive data to the repo.***
 
 ## Available Scripts
