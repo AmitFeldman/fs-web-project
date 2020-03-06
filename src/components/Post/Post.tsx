@@ -5,10 +5,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
-import UserLink from '../UserLink/UserLink';
 import Comment from './Comment/Comment';
 import CreateComment from './CreateComment/CreateComment';
-import {formatDate, sortByDescendingDate} from '../../utils/date-helper';
+import {sortByDescendingDate} from '../../utils/date-helper';
+import DataFooter from '../DataFooter/DataFooter';
 
 const Post: FC = () => {
   const [post, setPost] = useState<PostWithComments | null>();
@@ -35,23 +35,31 @@ const Post: FC = () => {
   return (
     <>
       <Typography variant="h2">{title}</Typography>
-      <Typography variant="caption">
-        Submitted {formatDate(date)} by{' '}
-        <UserLink user={author}>
-          <Typography variant="caption">{author.username}</Typography>
-        </UserLink>
-      </Typography>
+      <DataFooter user={author} date={date} />
       <Divider />
 
       <Typography variant="body1">{body}</Typography>
       <Divider />
       <br />
 
-      <CreateComment postId={postId} />
+      <CreateComment
+        postId={postId}
+        onCreateComment={newComment => {
+          // @ts-ignore
+          setPost(currPost => {
+            const comments = currPost?.comments || [];
+
+            return {
+              ...currPost,
+              comments: [newComment, ...comments],
+            };
+          });
+        }}
+      />
       <br />
 
       <section>
-        <Typography variant="h5">Comments:</Typography>
+        <Typography variant="h6">{comments.length} Comments</Typography>
         <Divider />
         <br />
 

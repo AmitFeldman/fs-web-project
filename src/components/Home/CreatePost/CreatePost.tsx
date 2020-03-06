@@ -5,7 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import {Create} from '@material-ui/icons';
-import {createPost} from '../../../utils/posts-api';
+import {createPost, Post} from '../../../utils/posts-api';
+import {useAuth} from '../../../context/AuthContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,14 +29,36 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const CreatePost: FC = () => {
+interface CreatePostProps {
+  onCreatePost: (newPost: Post) => void;
+}
+
+const CreatePost: FC<CreatePostProps> = ({onCreatePost}) => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const {input, inputContainer, root, fab} = useStyles();
+  const {user} = useAuth();
 
   const clearForm = () => {
     setTitle('');
     setBody('');
+  };
+
+  const submitPost = async () => {
+    if (user) {
+      try {
+        const newPost = await createPost({title, body});
+        onCreatePost({
+          ...newPost,
+          author: user,
+        });
+        clearForm();
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log('not logged in');
+    }
   };
 
   return (
@@ -74,7 +97,7 @@ const CreatePost: FC = () => {
             className={fab}
             color="primary"
             variant="extended"
-            onClick={() => createPost({title, body}).then(clearForm)}>
+            onClick={submitPost}>
             <Create />
             Post
           </Fab>
