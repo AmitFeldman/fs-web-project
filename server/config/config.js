@@ -7,7 +7,7 @@ const express = {
 
 const mongo = {
   user: 'alon2',
-  host: 'alon2.documents.azure.com',
+  host: 'alon2.mongo.cosmos.azure.com',
   port: '10255',
   database: 'fs-project',
   password: secrets.mongoPassword,

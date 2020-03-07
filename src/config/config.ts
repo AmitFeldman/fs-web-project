@@ -1,14 +1,14 @@
 import secrets from './secrets';
 
-interface newsConfig {
+interface ApiConfig {
   apiKey: string;
 }
 
-const news: newsConfig = {
+const news: ApiConfig = {
   apiKey: secrets.newsApiKey,
 };
 
-const google: newsConfig = {
+const google: ApiConfig = {
   apiKey: secrets.googleApiKey,
 };
 

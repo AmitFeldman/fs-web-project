@@ -31,7 +31,7 @@ const NavBar: FC = () => {
       <AppBar position="static">
         <Toolbar>
           <Grid container justify="space-between" alignItems="center">
-            <Grid item container xs={10}>
+            <Grid item container xs={9}>
               <Grid item>
                 <IconButton edge="start" className={menuButton} color="inherit">
                   <MenuIcon />
@@ -48,7 +48,7 @@ const NavBar: FC = () => {
                 About Us
               </Button>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <UserToolbar user={user} logout={logout} />
             </Grid>
           </Grid>

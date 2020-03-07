@@ -11,6 +11,7 @@ import posts from './routes/api/posts';
 import comments from './routes/api/comments';
 import locations from './routes/api/locations';
 import {parseToken} from './middlewares/auth';
+import {initChangesListener} from './utils/changes-listener';
 
 const app = express();
 
@@ -58,3 +59,6 @@ socketServer.listen(socketPort);
 console.log(`socket listening on port ${socketPort}...`);
 
 initSocketIO(io);
+
+// Init mongo watchers
+initChangesListener();

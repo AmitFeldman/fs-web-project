@@ -3,7 +3,6 @@ import {Router} from 'express';
 import Post from '../../models/Post';
 import {isIdValid} from '../../utils/validation';
 import {isLoggedIn} from '../../middlewares/auth';
-import {onNewPost} from '../../utils/changes-listener';
 
 const router = new Router();
 
@@ -79,10 +78,7 @@ router.post('/create', isLoggedIn, (req, res) => {
 
   newPost
     .save()
-    .then(post => {
-      onNewPost(post);
-      return res.json(post);
-    })
+    .then(post => res.json(post))
     .catch(err => console.log(err.message));
 });
 
