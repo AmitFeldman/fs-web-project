@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import {Redirect} from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,9 +23,22 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const NewsCard: FC = () => {
-  const {author, title, description, url, urlToImage} = getArticle();
-
   const {root, media} = useStyles();
+
+  const article = getArticle();
+
+  if (!Boolean(article)) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/error',
+          state: {error: 'News API not working, sorry!'},
+        }}
+      />
+    );
+  }
+
+  const {author, title, description, url, urlToImage} = article;
 
   return (
     <Card className={root}>

@@ -31,6 +31,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const includesPost = (
+  post: BasicPost,
+  posts: (BasicPost | Post)[]
+): boolean => {
+  return posts.some(p => p._id === post._id);
+};
+
 const Home: FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPosts, setNewPosts] = useState<BasicPost[]>([]);
@@ -43,17 +50,22 @@ const Home: FC = () => {
 
   useEffect(() => {
     const cancelOnSocketEvent = onSocketEvent<BasicPost>(
-      'NEW_POST',
-      newPost => {
-        if (newPost.author !== user?._id)
-          setNewPosts(newPosts => [newPost, ...newPosts]);
+      'POST_CHANGE',
+      changedPost => {
+        // Check that user is not author and that it is a new post
+        if (
+          changedPost.author !== user?._id &&
+          !includesPost(changedPost, newPosts) &&
+          !includesPost(changedPost, posts)
+        )
+          setNewPosts(newPosts => [changedPost, ...newPosts]);
       }
     );
 
     return () => {
       cancelOnSocketEvent();
     };
-  }, [user]);
+  }, [user, newPosts, posts]);
 
   const showNewPosts = async () => {
     const result = await getPostsByIds(...newPosts.map(({_id}) => _id));

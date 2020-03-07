@@ -2,6 +2,7 @@ import React, {FC, useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {getPostById, PostWithComments} from '../../utils/posts-api';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import CreateComment from './CreateComment/CreateComment';
@@ -15,8 +16,8 @@ import {
   WhatsappIcon,
   WhatsappShareButton,
 } from 'react-share';
-
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import LikePost from '../LikePost/LikePost';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,21 +71,43 @@ const Post: FC = () => {
     return <CircularProgress />;
   }
 
-  const {author, body, comments, title, date} = post;
+  const {author, body, comments, title, date, _id, likes} = post;
 
   return (
     <>
-      <Typography noWrap variant="h2">
-        {title}
-      </Typography>
-      <DataFooter user={author} date={date} />
-      <Divider />
+      <Grid container>
+        <Grid
+          item
+          xs={1}
+          container
+          direction="column"
+          justify="center"
+          alignItems="center">
+          <Grid item>
+            <Typography variant="h6">{likes.length}</Typography>
+          </Grid>
+          <Grid item>
+            <LikePost
+              postId={_id}
+              likes={likes}
+              onChange={newLikes => setPost({...post, likes: newLikes})}
+            />
+          </Grid>
+        </Grid>
+        <Grid item xs={11}>
+          <Typography noWrap variant="h2">
+            {title}
+          </Typography>
+          <DataFooter user={author} date={date} />
+          <Divider />
 
-      <Typography paragraph variant="body1">
-        {body}
-      </Typography>
-      <Divider />
-      <br />
+          <Typography paragraph variant="body1">
+            {body}
+          </Typography>
+          <Divider />
+          <br />
+        </Grid>
+      </Grid>
 
       <CreateComment
         postId={postId}
