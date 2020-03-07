@@ -82,6 +82,7 @@ const About: FC = () => {
 
       <section className={video}>
         <iframe
+          title="blog-video"
           width="560"
           height="315"
           src="https://www.youtube.com/embed/J7Ea31Azebs"

@@ -18,12 +18,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface UserToolbarProps {
+interface UserBarProps {
   user: User | null;
   logout: () => Promise<void>;
 }
 
-const UserToolbar: FC<UserToolbarProps> = ({user, logout}) => {
+const UserBar: FC<UserBarProps> = ({user, logout}) => {
   const [userMenuAnchor, setUserMenuAnchor] = useState();
   const {navBarText} = useStyles();
 
@@ -31,20 +31,18 @@ const UserToolbar: FC<UserToolbarProps> = ({user, logout}) => {
 
   return user ? (
     <>
-      <Grid container>
-        <Grid item className={navBarText}>
-          <Typography>{`Hello, ${user.username}`}</Typography>
-        </Grid>
-        <Grid item>
-          <IconButton
-            onClick={({target}: MouseEvent<HTMLElement>) =>
-              setUserMenuAnchor(target)
-            }
-            edge="end"
-            color="inherit">
-            <AccountCircle />
-          </IconButton>
-        </Grid>
+      <Grid item className={navBarText}>
+        <Typography>{`Hello, ${user.username}`}</Typography>
+      </Grid>
+      <Grid item>
+        <IconButton
+          onClick={({target}: MouseEvent<HTMLElement>) =>
+            setUserMenuAnchor(target)
+          }
+          edge="end"
+          color="inherit">
+          <AccountCircle />
+        </IconButton>
       </Grid>
       <Menu
         anchorEl={userMenuAnchor}
@@ -62,14 +60,26 @@ const UserToolbar: FC<UserToolbarProps> = ({user, logout}) => {
     </>
   ) : (
     <>
-      <Button color="inherit" component={RouterLink} to="/login">
-        Login
-      </Button>
-      <Button color="inherit" component={RouterLink} to="/register">
-        Register
-      </Button>
+      <Grid item className={navBarText}>
+        <Button
+          color="inherit"
+          component={RouterLink}
+          to="/login"
+          variant="outlined">
+          Login
+        </Button>
+      </Grid>
+      <Grid item className={navBarText}>
+        <Button
+          color="inherit"
+          component={RouterLink}
+          to="/register"
+          variant="outlined">
+          Register
+        </Button>
+      </Grid>
     </>
   );
 };
 
-export default UserToolbar;
+export default UserBar;
