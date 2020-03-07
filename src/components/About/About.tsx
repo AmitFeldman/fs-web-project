@@ -20,11 +20,15 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       padding: theme.spacing(3),
     },
+    video: {
+      width: '100%',
+      textAlign: 'center',
+    },
   })
 );
 
 const About: FC = () => {
-  const {textContainer, blockquote} = useStyles();
+  const {textContainer, blockquote, video} = useStyles();
 
   return (
     <>
@@ -68,8 +72,31 @@ const About: FC = () => {
       <Divider />
 
       <header>
-        <Typography variant="h3" align="center">
-          Come Visit!
+        <Typography variant="h4" align="center">
+          Why we think blogging can help you!
+        </Typography>
+      </header>
+
+      <Divider />
+      <br />
+
+      <section className={video}>
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/J7Ea31Azebs"
+          frameBorder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </section>
+
+      <br />
+      <Divider />
+
+      <header>
+        <Typography variant="h4" align="center">
+          Come visit one of our offices!
         </Typography>
       </header>
 
@@ -77,7 +104,6 @@ const About: FC = () => {
       <br />
 
       <LocationsMap />
-      <br />
       <br />
     </>
   );
