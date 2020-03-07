@@ -2,7 +2,7 @@ import Post from '../models/Post';
 import {emitEvent} from './socket-service';
 import BsonObjectId from 'bson-objectid';
 
-const NEW_POST_EVENT = 'NEW_POST';
+const POST_CHANGE_EVENT = 'POST_CHANGE';
 
 const options = {fullDocument: 'updateLookup'};
 
@@ -26,7 +26,7 @@ const initChangesListener = () => {
 };
 
 const onNewPost = postId => {
-  emitEvent(NEW_POST_EVENT, postId);
+  emitEvent(POST_CHANGE_EVENT, postId);
 };
 
 export {initChangesListener};

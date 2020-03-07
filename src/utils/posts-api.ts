@@ -8,6 +8,7 @@ export interface Post extends BasicType {
   title: string;
   body: string;
   comments: string[];
+  likes: string[];
 }
 
 export interface BasicPost extends Omit<Post, 'author'> {
@@ -42,4 +43,22 @@ const createPost = async (createPostData: CreatePostBody): Promise<Post> => {
   });
 };
 
-export {getPosts, createPost, getPostById, getPostsByIds};
+interface PostToggleLikeBody {
+  postId: Post['_id'];
+}
+
+const likePost = async (postId: Post['_id']): Promise<BasicPost> => {
+  return await client<PostToggleLikeBody, BasicPost>('posts/like', {
+    body: {postId},
+    method: 'PUT',
+  });
+};
+
+const unlikePost = async (postId: Post['_id']): Promise<BasicPost> => {
+  return await client<PostToggleLikeBody, BasicPost>('posts/unlike', {
+    body: {postId},
+    method: 'PUT',
+  });
+};
+
+export {getPosts, createPost, getPostById, getPostsByIds, likePost, unlikePost};
