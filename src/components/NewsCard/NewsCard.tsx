@@ -12,6 +12,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       textAlign: 'center',
+      maxHeight: '80vh',
+      overflowY: 'auto',
     },
     media: {
       height: '50vh',

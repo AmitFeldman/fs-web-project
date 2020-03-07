@@ -11,6 +11,7 @@ import Container from '@material-ui/core/Container';
 import Home from './components/Home/Home';
 import Post from './components/Post/Post';
 import ScrollTop from './components/ScrollTop/ScrollTop';
+import About from './components/About/About';
 
 const ANCHOR = 'back-to-top-anchor';
 
@@ -37,6 +38,10 @@ const App: FC = () => {
 
           <Route path="/user/:username">
             <Profile />
+          </Route>
+
+          <Route path="/about">
+            <About />
           </Route>
 
           <LoggedOutRoute path="/login">

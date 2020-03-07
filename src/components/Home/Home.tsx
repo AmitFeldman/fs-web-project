@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
       float: 'right',
     },
     modal: {
-      width: '50%',
+      width: '80%',
       margin: 'auto',
     },
   })

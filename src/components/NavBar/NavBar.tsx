@@ -31,7 +31,7 @@ const NavBar: FC = () => {
       <AppBar position="static">
         <Toolbar>
           <Grid container justify="space-between" alignItems="center">
-            <Grid item container xs={6}>
+            <Grid item container xs={10}>
               <Grid item>
                 <IconButton edge="start" className={menuButton} color="inherit">
                   <MenuIcon />
@@ -43,7 +43,12 @@ const NavBar: FC = () => {
                 </Button>
               </Grid>
             </Grid>
-            <Grid item>
+            <Grid item className={navBarText} xs={1}>
+              <Button component={RouterLink} color="inherit" to="/about">
+                About Us
+              </Button>
+            </Grid>
+            <Grid item xs={1}>
               <UserToolbar user={user} logout={logout} />
             </Grid>
           </Grid>

@@ -5,7 +5,11 @@ interface newsConfig {
 }
 
 const news: newsConfig = {
-  apiKey: secrets.apiKey,
+  apiKey: secrets.newsApiKey,
 };
 
-export {news};
+const google: newsConfig = {
+  apiKey: secrets.googleApiKey,
+};
+
+export {news, google};

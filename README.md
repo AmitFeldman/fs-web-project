@@ -9,11 +9,12 @@ export default {
   mongoPassword: 'YOUR_MONGO_PASSWORD'
 };
 ```
-We use a [news api](https://newsapi.org/) to shows users popular articles.<br />
+We use a [news api](https://newsapi.org/) to shows users popular articles and the [google maps api](https://developers.google.com/maps/documentation) to show maps.<br />
 To use the api create the file `secrets.ts` in `src/config`. It should look like this:<br />
 ```
 export default {
-  apiKey: 'YOUR_NEWS_API_KEY'
+  newsApiKey: 'YOUR_NEWS_API_KEY',
+  googleApiKey: 'YOUR_GOOGLE_API_KEY',
 };
 ```
 ***REMINDER: Do not push your mongo password or other sensitive data to the repo.***

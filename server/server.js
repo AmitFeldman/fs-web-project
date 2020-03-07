@@ -5,11 +5,12 @@ import {express as expressConfig, mongo} from './config/config';
 import socketIO from 'socket.io';
 import http from 'http';
 import cors from 'cors';
-import {initSocketIO} from "./utils/socket-service";
+import {initSocketIO} from './utils/socket-service';
 import users from './routes/api/users';
 import posts from './routes/api/posts';
 import comments from './routes/api/comments';
-import {parseToken} from "./middlewares/auth";
+import locations from './routes/api/locations';
+import {parseToken} from './middlewares/auth';
 
 const app = express();
 
@@ -28,9 +29,10 @@ app.use(bodyParser.json());
 app.use(parseToken);
 
 // Routes
-app.use("/api/users", users);
-app.use("/api/posts", posts);
-app.use("/api/comments", comments);
+app.use('/api/users', users);
+app.use('/api/posts', posts);
+app.use('/api/comments', comments);
+app.use('/api/locations', locations);
 
 // Connect to MongoDB
 console.log(`connecting to MongoDB through uri ${mongo.mongoURI}...`);
