@@ -25,12 +25,6 @@ const getPosts = async (): Promise<Post[]> => {
 
 type IdArray = Post['_id'][];
 
-const getPostsByIds = async (...ids: IdArray): Promise<Post[]> => {
-  return await client<{ids: IdArray}, Post[]>('posts/ids', {
-    body: {ids},
-  });
-};
-
 const getPostById = async (id: Post['_id']): Promise<PostWithComments> => {
   return await client<{}, PostWithComments>(`posts/id/${id}`);
 };
@@ -61,4 +55,4 @@ const unlikePost = async (postId: Post['_id']): Promise<BasicPost> => {
   });
 };
 
-export {getPosts, createPost, getPostById, getPostsByIds, likePost, unlikePost};
+export {getPosts, createPost, getPostById, likePost, unlikePost};

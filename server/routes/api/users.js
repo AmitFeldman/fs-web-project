@@ -1,7 +1,5 @@
 import {Router} from 'express';
-import mongoose from 'mongoose';
 import User from '../../models/User';
-import {isIdValid} from "../../utils/validation";
 
 const router = new Router();
 

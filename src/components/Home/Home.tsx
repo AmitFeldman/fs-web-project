@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import {BasicPost, getPosts, getPostsByIds, Post} from '../../utils/posts-api';
+import {getPosts, Post} from '../../utils/posts-api';
 import {useAuth} from '../../context/AuthContext';
 import {useAsync} from 'react-async';
 import {onSocketEvent} from '../../utils/socket-client';
@@ -31,16 +31,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const includesPost = (
-  post: BasicPost,
-  posts: (BasicPost | Post)[]
-): boolean => {
+const includesPost = (post: Post, posts: Post[]): boolean => {
   return posts.some(p => p._id === post._id);
 };
 
 const Home: FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [newPosts, setNewPosts] = useState<BasicPost[]>([]);
+  const [newPosts, setNewPosts] = useState<Post[]>([]);
   const {user} = useAuth();
   const [helpOpen, setHelpOpen] = useState(false);
 
@@ -49,12 +46,12 @@ const Home: FC = () => {
   useAsync(getPosts, {onResolve: result => setPosts(result)});
 
   useEffect(() => {
-    const cancelOnSocketEvent = onSocketEvent<BasicPost>(
+    const cancelOnSocketEvent = onSocketEvent<Post>(
       'POST_CHANGE',
       changedPost => {
         // Check that user is not author and that it is a new post
         if (
-          changedPost.author !== user?._id &&
+          changedPost.author._id !== user?._id &&
           !includesPost(changedPost, newPosts) &&
           !includesPost(changedPost, posts)
         )
@@ -68,9 +65,7 @@ const Home: FC = () => {
   }, [user, newPosts, posts]);
 
   const showNewPosts = async () => {
-    const result = await getPostsByIds(...newPosts.map(({_id}) => _id));
-
-    setPosts(oldPosts => [...result, ...oldPosts]);
+    setPosts(oldPosts => [...newPosts, ...oldPosts]);
     setNewPosts([]);
   };
 
