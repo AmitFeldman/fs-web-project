@@ -28,8 +28,8 @@ const getArticles = async (): Promise<Article[]> => {
 };
 
 const initArticles = async () => {
-  const result = await getArticles();
-  articles = result.filter(a => Boolean(a));
+  // const result = await getArticles();
+  // articles = result.filter(a => Boolean(a));
 };
 
 // Get random number between 1 and max (inclusive)

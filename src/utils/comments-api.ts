@@ -1,6 +1,7 @@
 import {User} from './users-api';
 import client from './api-client';
 import {BasicType} from '../types/basic-type';
+import {DateCountData} from './posts-api';
 
 export interface CommentItem extends BasicType {
   author: User;
@@ -20,4 +21,8 @@ const createComment = async (
   });
 };
 
-export {createComment};
+const getCommentsPerDateCount = async (): Promise<DateCountData[]> => {
+  return await client<{}, DateCountData[]>('comments/stats-days');
+};
+
+export {createComment, getCommentsPerDateCount};

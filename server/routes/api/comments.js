@@ -30,4 +30,31 @@ router.post('/create', (req, res) => {
     .catch(err => console.log(err.message));
 });
 
+// GET api/comments/stats-days
+router.get('/stats-days', (req, res) => {
+  Comment.aggregate([
+    {
+      $group: {
+        _id: {$dateToString: {format: '%Y-%m-%d', date: '$date'}},
+        count: {$sum: 1},
+      },
+    },
+    {
+      $sort: {_id: 1},
+    },
+    {
+      $project: {
+        _id: 0,
+        date: '$_id',
+        count: 1,
+      },
+    },
+  ])
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => console.log(err));
+});
+
+
 export default router;

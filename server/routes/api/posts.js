@@ -17,6 +17,32 @@ router.get('', (req, res) => {
     });
 });
 
+// GET api/posts/stats-days
+router.get('/stats-days', (req, res) => {
+  Post.aggregate([
+    {
+      $group: {
+        _id: {$dateToString: {format: '%Y-%m-%d', date: '$date'}},
+        count: {$sum: 1},
+      },
+    },
+    {
+      $sort: {_id: 1},
+    },
+    {
+      $project: {
+        _id: 0,
+        date: '$_id',
+        count: 1,
+      },
+    },
+  ])
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => console.log(err));
+});
+
 // GET api/posts/ids
 router.post('/ids', (req, res) => {
   const {ids = []} = req.body;

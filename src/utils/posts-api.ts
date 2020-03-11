@@ -55,4 +55,20 @@ const unlikePost = async (postId: Post['_id']): Promise<BasicPost> => {
   });
 };
 
-export {getPosts, createPost, getPostById, likePost, unlikePost};
+export interface DateCountData {
+  count: number;
+  date: string;
+}
+
+const getPostsPerDayCount = async (): Promise<DateCountData[]> => {
+  return await client<{}, DateCountData[]>('posts/stats-days');
+};
+
+export {
+  getPosts,
+  createPost,
+  getPostById,
+  likePost,
+  unlikePost,
+  getPostsPerDayCount,
+};
