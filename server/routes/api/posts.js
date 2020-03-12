@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import {Router} from 'express';
 import Post from '../../models/Post';
+import User from '../../models/User';
 import {isIdValid} from '../../utils/validation';
 import {isLoggedIn} from '../../middlewares/auth';
 
@@ -27,6 +28,36 @@ router.post('/ids', (req, res) => {
     _id: {$in: mappedIds},
   })
     .populate('author')
+    .exec((err, posts) => {
+      if (err) return console.log(err);
+
+      res.json(posts);
+    });
+});
+
+// GET api/posts/recommended/:userId
+router.get('/recommended/:userId', (req, res) => {
+  const {userId} = req.params;
+
+  Post.aggregate([
+    {$match: {likes: {$elemMatch: {$eq: mongoose.Types.ObjectId(userId)}}}},
+    {$group : {_id: "$author"}},
+    {$lookup: {
+        from: Post.collection.name,
+        localField: '_id',
+        foreignField: 'author',
+        as: 'post'
+      }},
+    {$unwind: {path: '$post'}},
+    {$replaceRoot:{newRoot: "$post"}},
+    {$lookup: {
+        from: User.collection.name,
+        localField: 'author',
+        foreignField: '_id',
+        as: 'author'
+      }},
+    {$unwind: {path: '$author'}},
+  ])
     .exec((err, posts) => {
       if (err) return console.log(err);
 
