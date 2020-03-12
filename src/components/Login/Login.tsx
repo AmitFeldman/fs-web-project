@@ -79,7 +79,6 @@ const Login: FC = () => {
         </Grid>
       </ValidatorForm>
       <AlertSnackbar
-        open={error !== ''}
         message={error}
         button={
           <Button
@@ -90,7 +89,7 @@ const Login: FC = () => {
             Register
           </Button>
         }
-        setState={setError}
+        setMessage={setError}
       />
       {/* <Snackbar
         anchorOrigin={{

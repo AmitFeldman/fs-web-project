@@ -4,24 +4,22 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
 interface AlertSnackbarProps {
-  open: boolean;
   message: string;
   button?: JSX.Element;
-  setState: (newState: any) => void;
+  setMessage: (newState: string) => void;
 }
 
 const AlertSnackbar: FC<AlertSnackbarProps> = ({
-  open,
   message,
   button,
-  setState,
+  setMessage,
 }) => {
-  const handleClose = (event?: any, reason?: string) => {
+  const handleClose = (event: any, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
 
-    setState('');
+    setMessage('');
   };
 
   return (
@@ -30,7 +28,7 @@ const AlertSnackbar: FC<AlertSnackbarProps> = ({
         vertical: 'bottom',
         horizontal: 'left',
       }}
-      open={open}
+      open={message !== ''}
       autoHideDuration={4000}
       onClose={handleClose}
       message={message}

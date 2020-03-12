@@ -86,7 +86,7 @@ const Login: FC = () => {
           </Grid>
         </Grid>
       </ValidatorForm>
-      <AlertSnackbar open={error !== ''} message={error} setState={setError} />
+      <AlertSnackbar message={error} setMessage={setError} />
     </>
   );
 };
