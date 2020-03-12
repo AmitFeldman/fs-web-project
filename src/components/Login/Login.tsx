@@ -2,12 +2,11 @@ import React, {FC, useState} from 'react';
 import {useAuth} from '../../context/AuthContext';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import {Link as RouterLink} from 'react-router-dom';
+import {UserErrorCode} from '../../utils/users-api';
+import AlertSnackbar from '../../components/AlertSnackbar/AlertSnackbar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,17 +27,17 @@ const Login: FC = () => {
 
   const loginUser = () => {
     login({username, password}).catch(err => {
-      if (err.error === 1) setError(err.msg);
+      if (err.code === UserErrorCode.USER_NOT_FOUND) setError(err.msg);
     });
   };
 
-  const handleCloseError = (event?: any, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleCloseError = (event?: any, reason?: string) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setError('');
-  };
+  //   setError('');
+  // };
 
   return (
     <>
@@ -79,7 +78,21 @@ const Login: FC = () => {
           </Grid>
         </Grid>
       </ValidatorForm>
-      <Snackbar
+      <AlertSnackbar
+        open={error !== ''}
+        message={error}
+        button={
+          <Button
+            color="primary"
+            size="small"
+            component={RouterLink}
+            to="/register">
+            Register
+          </Button>
+        }
+        setState={setError}
+      />
+      {/* <Snackbar
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -102,7 +115,7 @@ const Login: FC = () => {
             </IconButton>
           </React.Fragment>
         }
-      />
+      /> */}
     </>
   );
 };

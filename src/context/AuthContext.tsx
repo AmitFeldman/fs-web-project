@@ -81,9 +81,7 @@ const AuthProvider: FC<any> = props => {
         logout,
         getUserStatus: () => userStatus,
         isUserAdmin: () => userStatus === UserStatus.ADMIN,
-        isUserLoggedIn: () => {
-          return userStatus !== UserStatus.NONE;
-        },
+        isUserLoggedIn: () => userStatus !== UserStatus.NONE,
       }}
       {...props}
     />

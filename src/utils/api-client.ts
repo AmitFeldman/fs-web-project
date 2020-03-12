@@ -57,7 +57,7 @@ const client = <Body, Response>(
           const {error} = result;
 
           if (Boolean(error)) {
-            reject(result);
+            reject(error);
           }
 
           resolve(result);

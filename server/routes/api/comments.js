@@ -11,7 +11,7 @@ router.post('/create', (req, res) => {
   const {_id} = req.user;
 
   if (!_id || !isIdValid(_id) || !comment)
-    return res.status(400).send({error: 'Not all information sent'});
+    return res.status(400).send({error: {msg: 'Not all information sent'}});
 
   const newComment = new Comment({
     author: _id,
