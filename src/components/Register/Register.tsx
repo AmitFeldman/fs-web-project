@@ -29,6 +29,7 @@ const Login: FC = () => {
   return (
     <ValidatorForm onSubmit={handleRegister}>
       <Grid container className={root} direction="column" spacing={3}>
+        <h1>Register</h1>
         <Grid item>
           <TextValidator
             name="Username"
@@ -39,7 +40,7 @@ const Login: FC = () => {
             label="Username"
             variant="outlined"
             validators={['required']}
-            errorMessages={['This field is required']}
+            errorMessages={['Username is required']}
           />
         </Grid>
         <Grid item>
@@ -52,7 +53,7 @@ const Login: FC = () => {
             label="Email"
             variant="outlined"
             validators={['required', 'isEmail']}
-            errorMessages={['This field is required', 'Email is not valid']}
+            errorMessages={['Email is required', 'Email is not valid']}
           />
         </Grid>
         <Grid item>
@@ -65,7 +66,7 @@ const Login: FC = () => {
             label="Password"
             variant="outlined"
             validators={['required']}
-            errorMessages={['This field is required']}
+            errorMessages={['Password is required']}
           />
         </Grid>
         <Grid item>
