@@ -9,12 +9,12 @@ import LoggedOutRoute from './components/LoggedOutRoute/LoggedOutRoute';
 import Profile from './components/Profile/Profile';
 import Container from '@material-ui/core/Container';
 import Home from './components/Home/Home';
-import Post from './components/Post/Post';
+import Post from './components/PostForm/PostForm';
 import ScrollTop from './components/ScrollTop/ScrollTop';
 import About from './components/About/About';
 import AdminRoute from './components/AdminRoute/AdminRoute';
 import ManageUsers from './components/ManageUsers/ManageUsers';
-import Statistics from './components/Statistics/Statisitcs';
+import Statistics from './components/Statistics/Statistics';
 
 const ANCHOR = 'back-to-top-anchor';
 

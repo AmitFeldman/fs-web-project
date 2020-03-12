@@ -23,10 +23,8 @@ const getPosts = async (): Promise<Post[]> => {
   return await client<{}, Post[]>('posts');
 };
 
-type IdArray = Post['_id'][];
-
-const getPostById = async (id: Post['_id']): Promise<PostWithComments> => {
-  return await client<{}, PostWithComments>(`posts/id/${id}`);
+const getPostById = async (id: Post['_id']): Promise<Post> => {
+  return await client<{}, Post>(`posts/id/${id}`);
 };
 
 export type CreatePostBody = Pick<Post, 'title' | 'body'>;

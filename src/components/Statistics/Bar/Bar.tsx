@@ -63,7 +63,7 @@ const Bar: FC<BarProps<any>> = ({
       .attr('width', x.bandwidth())
       .attr('height', d => height - y(d[yAxis]))
       .attr('fill', '#558b2f');
-  }, []);
+  }, [data, height, margin.left, margin.top, width, xAxis, yAxis]);
 
   return (
     <svg

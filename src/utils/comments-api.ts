@@ -21,8 +21,24 @@ const createComment = async (
   });
 };
 
+export interface GetCommentsBody {
+  postId: string;
+  fromDateFilter?: string;
+  toDateFilter?: string;
+  authorFilter?: string;
+  commentFilter?: string;
+}
+
+const getComments = async (
+  getCommentsBody: GetCommentsBody
+): Promise<CommentItem[]> => {
+  return await client<GetCommentsBody, CommentItem[]>('comments', {
+    body: getCommentsBody,
+  });
+};
+
 const getCommentsPerDateCount = async (): Promise<DateCountData[]> => {
   return await client<{}, DateCountData[]>('comments/stats-days');
 };
 
-export {createComment, getCommentsPerDateCount};
+export {createComment, getCommentsPerDateCount, getComments};
