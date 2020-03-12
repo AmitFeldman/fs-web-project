@@ -54,7 +54,9 @@ const client = <Body, Response>(
     .then(
       result =>
         new Promise((resolve, reject) => {
-          if (Boolean(result)) {
+          const {error} = result;
+
+          if (Boolean(error)) {
             reject(result);
           }
 
