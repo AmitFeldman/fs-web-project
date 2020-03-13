@@ -51,7 +51,7 @@ const Home: FC = () => {
       changedPost => {
         // Check that user is not author and that it is a new post
         if (
-          changedPost.author._id !== user?._id &&
+          changedPost.author?._id !== user?._id &&
           !includesPost(changedPost, newPosts) &&
           !includesPost(changedPost, posts)
         )
