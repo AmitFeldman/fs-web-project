@@ -16,7 +16,6 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import {formatDate} from '../../utils/date-helper';
-import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -92,6 +91,12 @@ interface UserRowProps {
 
 const UserRow: FC<UserRowProps> = ({user, onUserUpdate, onUserDelete}) => {
   const [localUser, setLocalUser] = useState<User>(user);
+  const [isValid, setIsValid] = useState<boolean>(true);
+  const form = useRef<ValidatorForm>(null);
+
+  useEffect(() => {
+    form?.current?.isFormValid(false).then(validity => setIsValid(validity));
+  }, [localUser]);
 
   const submitUpdate = () => {
     const {username, email, isAdmin} = localUser;
@@ -121,7 +126,7 @@ const UserRow: FC<UserRowProps> = ({user, onUserUpdate, onUserDelete}) => {
 
   return (
     <Paper>
-      <ValidatorForm onSubmit={submitUpdate}>
+      <ValidatorForm ref={form} onSubmit={submitUpdate}>
         <Grid container spacing={2} justify="space-around" alignItems="center">
           <Grid item>
             <TextValidator
@@ -174,7 +179,7 @@ const UserRow: FC<UserRowProps> = ({user, onUserUpdate, onUserDelete}) => {
               type="submit"
               variant="contained"
               color="secondary"
-              disabled={!localUserChanged()}>
+              disabled={!(localUserChanged() && isValid)}>
               Save
             </Button>
           </Grid>
