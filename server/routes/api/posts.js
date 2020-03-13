@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import {Router} from 'express';
 import Post from '../../models/Post';
+import User from '../../models/User';
 import {isIdValid} from '../../utils/validation';
 import {isLoggedIn} from '../../middlewares/auth';
 
@@ -8,13 +9,21 @@ const router = new Router();
 
 // GET api/posts
 router.get('', (req, res) => {
-  Post.find()
-    .populate('author')
-    .exec((err, posts) => {
-      if (err) return console.log(err);
-
-      res.json(posts);
-    });
+  Post.aggregate([
+    {
+      $lookup: {
+        from: User.collection.name,
+        localField: 'author',
+        foreignField: '_id',
+        as: 'author',
+      },
+    },
+    {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
+  ])
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => console.log(err));
 });
 
 // GET api/posts/stats-days
@@ -43,38 +52,30 @@ router.get('/stats-days', (req, res) => {
     .catch(err => console.log(err));
 });
 
-// GET api/posts/ids
-router.post('/ids', (req, res) => {
-  const {ids = []} = req.body;
-
-  const mappedIds = ids.map(id => mongoose.Types.ObjectId(id));
-
-  Post.find({
-    _id: {$in: mappedIds},
-  })
-    .populate('author')
-    .exec((err, posts) => {
-      if (err) return console.log(err);
-
-      res.json(posts);
-    });
-});
-
 // GET api/posts/id/:id
 router.get('/id/:id', (req, res) => {
   const {id} = req.params;
 
   if (!isIdValid(id)) return res.status(400).send({error: 'Id not valid'});
 
-  const cursor = Post.findById(id);
-
-  cursor.populate('author').exec((err, post) => {
-    if (!post) {
-      return res.status(404).json({error: 'Post not found'});
-    }
-
-    res.json(post);
-  });
+  Post.aggregate([
+    {$match: {_id: mongoose.Types.ObjectId(id)}},
+    {
+      $lookup: {
+        from: User.collection.name,
+        localField: 'author',
+        foreignField: '_id',
+        as: 'author',
+      },
+    },
+    {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
+  ])
+    .then(result => {
+      // Aggregate returns array, but this query can only return one document
+      // because of match stage by id
+      res.json(result[0]);
+    })
+    .catch(err => console.log(err));
 });
 
 // POST api/posts/create
@@ -138,33 +139,5 @@ router.put('/unlike', isLoggedIn, (req, res) => {
       .catch(err => console.log(err.message));
   });
 });
-
-// PUT api/posts/update
-// router.put('/update', (req, res) => {
-//   const {postId, title, body} = req.body;
-//
-//   Post.findById(postId).then(post => {
-//     if (!post) {
-//       return res.status(404).json({error: 'Post not found'});
-//     }
-//
-//     if (title) post.title = title;
-//     if (body) post.body = body;
-//
-//     post
-//       .save()
-//       .then(post => res.json(post))
-//       .catch(err => console.log(err.message));
-//   });
-// });
-
-// POST api/posts/delete
-// router.delete('/delete', (req, res) => {
-//   const {postId} = req.body;
-//
-//   Post.findByIdAndDelete(postId)
-//     .then(() => res.json({message: 'Post successfully deleted'}))
-//     .catch(err => console.log(err.message));
-// });
 
 export default router;

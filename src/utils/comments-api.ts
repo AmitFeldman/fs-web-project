@@ -4,7 +4,7 @@ import {BasicType} from '../types/basic-type';
 import {DateCountData} from './posts-api';
 
 export interface CommentItem extends BasicType {
-  author: User | null;
+  author: User | undefined;
   post: string;
   comment: string;
 }

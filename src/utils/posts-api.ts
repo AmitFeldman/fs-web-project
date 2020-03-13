@@ -4,7 +4,7 @@ import {CommentItem} from './comments-api';
 import {BasicType} from '../types/basic-type';
 
 export interface Post extends BasicType {
-  author: User | null;
+  author: User | undefined;
   title: string;
   body: string;
   comments: string[];

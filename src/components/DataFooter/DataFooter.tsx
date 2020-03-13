@@ -6,7 +6,7 @@ import {User} from '../../utils/users-api';
 
 interface CardFooterProps {
   date: string;
-  user: User | null;
+  user: User | undefined;
 }
 
 const DataFooter: FC<CardFooterProps> = ({date, user}) => {

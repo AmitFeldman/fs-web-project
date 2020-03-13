@@ -51,7 +51,7 @@ router.post('', (req, res) => {
         as: 'author',
       },
     },
-    {$unwind: {path: '$author'}},
+    {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
     {$sort: {date: -1}},
   ];
 
