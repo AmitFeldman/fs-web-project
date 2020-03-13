@@ -23,6 +23,10 @@ const getPosts = async (): Promise<Post[]> => {
   return await client<{}, Post[]>('posts');
 };
 
+const getRecommendedPosts = async (): Promise<Post[]> => {
+  return await client<{}, Post[]>('posts/recommended');
+};
+
 const getPostById = async (id: Post['_id']): Promise<Post> => {
   return await client<{}, Post>(`posts/id/${id}`);
 };
@@ -64,7 +68,7 @@ const getPostsPerDayCount = async (): Promise<DateCountData[]> => {
 
 export {
   getPosts,
-  getRecommendedPosts
+  getRecommendedPosts,
   createPost,
   getPostById,
   likePost,

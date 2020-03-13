@@ -2,7 +2,6 @@ import React, {FC} from 'react';
 import Grid from '@material-ui/core/Grid';
 import {Post} from '../../../utils/posts-api';
 import PostCard from '../PostCard/PostCard';
-import {sortByDescendingDate} from '../../../utils/date-helper';
 
 interface PostListProps {
   posts: Post[];

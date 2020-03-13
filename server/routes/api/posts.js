@@ -19,6 +19,7 @@ router.get('', (req, res) => {
       },
     },
     {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
+    {$sort: {date: -1}}
   ])
     .then(result => {
       res.json(result);
@@ -52,7 +53,7 @@ router.get('/stats-days', (req, res) => {
     .catch(err => console.log(err));
 });
 
-// GET api/posts/recommended/:userId
+// GET api/posts/recommended
 router.get('/recommended', isLoggedIn ,(req, res) => {
   const {_id: userId} = req.user;
 
