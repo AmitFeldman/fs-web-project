@@ -36,12 +36,12 @@ router.post('/ids', (req, res) => {
 });
 
 // GET api/posts/recommended/:userId
-router.get('/recommended/:userId', (req, res) => {
-  const {userId} = req.params;
+router.get('/recommended', isLoggedIn ,(req, res) => {
+  const {_id: userId} = req.user;
 
   Post.aggregate([
     {$match: {likes: {$elemMatch: {$eq: mongoose.Types.ObjectId(userId)}}}},
-    {$group : {_id: "$author"}},
+    {$group : {_id: "$author", count: {$sum: 1}}},
     {$lookup: {
         from: Post.collection.name,
         localField: '_id',
@@ -49,7 +49,7 @@ router.get('/recommended/:userId', (req, res) => {
         as: 'post'
       }},
     {$unwind: {path: '$post'}},
-    {$replaceRoot:{newRoot: "$post"}},
+    {$replaceRoot:{newRoot:{$mergeObjects: [{ count: "$count"}, "$post" ]}}},
     {$lookup: {
         from: User.collection.name,
         localField: 'author',
@@ -57,6 +57,8 @@ router.get('/recommended/:userId', (req, res) => {
         as: 'author'
       }},
     {$unwind: {path: '$author'}},
+    {$sort: {count: -1, date: -1}},
+    {$project: {count: 0}}
   ])
     .exec((err, posts) => {
       if (err) return console.log(err);

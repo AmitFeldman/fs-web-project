@@ -23,6 +23,10 @@ const getPosts = async (): Promise<Post[]> => {
   return await client<{}, Post[]>('posts');
 };
 
+const getRecommendedPosts = async (): Promise<Post[]> => {
+  return await client<{}, Post[]>('posts/recommended');
+};
+
 type IdArray = Post['_id'][];
 
 const getPostById = async (id: Post['_id']): Promise<PostWithComments> => {
@@ -55,4 +59,4 @@ const unlikePost = async (postId: Post['_id']): Promise<BasicPost> => {
   });
 };
 
-export {getPosts, createPost, getPostById, likePost, unlikePost};
+export {getPosts, getRecommendedPosts, createPost, getPostById, likePost, unlikePost};
