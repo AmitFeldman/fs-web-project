@@ -15,6 +15,7 @@ const getToken = (): string | null => {
 
 const removeToken = (): Promise<void> => {
   window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+  window.localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
   return Promise.resolve();
 };
 

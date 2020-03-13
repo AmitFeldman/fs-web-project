@@ -1,9 +1,11 @@
-import React, {ChangeEvent, FC, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {useAuth} from '../../context/AuthContext';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
+import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+import {UserErrorCode} from '../../utils/users-api';
+import {useAlert} from '../../context/AlertContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,51 +16,76 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface LoginField {
-  value: string;
-  setValue: (newValue: string) => void;
-  label: string;
-}
-
 const Login: FC = () => {
   const {register} = useAuth();
   const {root} = useStyles();
+  const {alert} = useAlert();
 
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const loginFields: LoginField[] = [
-    {label: 'Username', setValue: setUsername, value: username},
-    {label: 'Email', setValue: setEmail, value: email},
-    {label: 'Password', setValue: setPassword, value: password},
-  ];
+  const handleRegister = () => {
+    register({username, email, password}).catch(err => {
+      if (
+        err.code === UserErrorCode.EMAIL_EXIST ||
+        err.code === UserErrorCode.USERNAME_EXIST
+      )
+        alert({message: err.msg});
+    });
+  };
 
   return (
-    <Grid container className={root} direction="column" spacing={3}>
-      {loginFields.map(({value, setValue, label}, index) => (
-        <Grid item key={index}>
-          <TextField
-            value={value}
-            onChange={({target}: ChangeEvent<HTMLInputElement>) =>
-              setValue(target.value)
-            }
-            label={label}
+    <ValidatorForm onSubmit={handleRegister}>
+      <Grid container className={root} direction="column" spacing={3}>
+        <h1>Register</h1>
+        <Grid item>
+          <TextValidator
+            name="Username"
+            value={username}
+            onChange={(e: React.FormEvent<HTMLInputElement>) => {
+              setUsername(e.currentTarget.value);
+            }}
+            label="Username"
             variant="outlined"
+            validators={['required']}
+            errorMessages={['Username is required']}
           />
         </Grid>
-      ))}
-      <Grid item>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            register({username, email, password});
-          }}>
-          Register
-        </Button>
+        <Grid item>
+          <TextValidator
+            name="Email"
+            value={email}
+            onChange={(e: React.FormEvent<HTMLInputElement>) => {
+              setEmail(e.currentTarget.value);
+            }}
+            label="Email"
+            variant="outlined"
+            validators={['required', 'isEmail']}
+            errorMessages={['Email is required', 'Email is not valid']}
+          />
+        </Grid>
+        <Grid item>
+          <TextValidator
+            name="Password"
+            type="password"
+            value={password}
+            onChange={(e: React.FormEvent<HTMLInputElement>) => {
+              setPassword(e.currentTarget.value);
+            }}
+            label="Password"
+            variant="outlined"
+            validators={['required']}
+            errorMessages={['Password is required']}
+          />
+        </Grid>
+        <Grid item>
+          <Button type="submit" variant="contained" color="primary">
+            Submit
+          </Button>
+        </Grid>
       </Grid>
-    </Grid>
+    </ValidatorForm>
   );
 };
 

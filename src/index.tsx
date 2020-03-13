@@ -9,13 +9,16 @@ import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import theme from './theme/mui-theme';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import {initArticles} from './utils/news-api';
+import {AlertProvider} from './context/AlertContext';
 
 ReactDOM.render(
   <AuthProvider>
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <CssBaseline>
-          <App />
+          <AlertProvider>
+            <App />
+          </AlertProvider>
         </CssBaseline>
       </ThemeProvider>
     </BrowserRouter>
