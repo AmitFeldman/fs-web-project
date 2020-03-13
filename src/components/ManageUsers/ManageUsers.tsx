@@ -35,7 +35,11 @@ const ManageUsers: FC = () => {
     setUsers(currentUsers => {
       const index = currentUsers.findIndex(({_id}) => _id === updatedUser._id);
 
-      return [...currentUsers.splice(index, 1)];
+      return [
+        ...currentUsers.slice(0, index),
+        updatedUser,
+        ...currentUsers.slice(index + 1, currentUsers.length),
+      ];
     });
   };
 
@@ -43,10 +47,7 @@ const ManageUsers: FC = () => {
     setUsers(currentUsers => {
       const index = currentUsers.findIndex(({_id}) => _id === userId);
 
-      return [
-        ...currentUsers.slice(0, index),
-        ...currentUsers.slice(index + 1, currentUsers.length),
-      ];
+      return [...currentUsers.splice(index, 1)];
     });
   };
 
