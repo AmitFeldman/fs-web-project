@@ -15,10 +15,14 @@ const DataFooter: FC<CardFooterProps> = ({date, user}) => {
       Submitted {formatDate(date)} by{' '}
       {user ? (
         <UserLink user={user}>
-          <Typography variant="caption">{user.username}</Typography>
+          <Typography variant="caption" color="secondary">
+            {user.username}
+          </Typography>
         </UserLink>
       ) : (
-        <Typography variant="caption">DELETED</Typography>
+        <Typography color="error" variant="caption">
+          DELETED
+        </Typography>
       )}
     </Typography>
   );
