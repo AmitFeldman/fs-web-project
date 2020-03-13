@@ -116,13 +116,10 @@ const UserRow: FC<UserRowProps> = ({user, onUserUpdate, onUserDelete}) => {
     setLocalUser(data => ({...data, [propertyName]: value}));
   };
 
-  const localUserChanged = (): boolean => {
-    return (
-      localUser.username !== user.username ||
-      localUser.email !== user.email ||
-      localUser.isAdmin !== user.isAdmin
-    );
-  };
+  const localUserChanged = (): boolean =>
+    localUser.username !== user.username ||
+    localUser.email !== user.email ||
+    localUser.isAdmin !== user.isAdmin;
 
   return (
     <Paper>
