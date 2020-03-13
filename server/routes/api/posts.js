@@ -89,7 +89,8 @@ router.get('/recommended', isLoggedIn ,(req, res) => {
 router.get('/id/:id', (req, res) => {
   const {id} = req.params;
 
-  if (!isIdValid(id)) return res.status(400).send({error: 'Id not valid'});
+  if (!isIdValid(id))
+    return res.status(400).send({error: {msg: 'Id not valid'}});
 
   Post.aggregate([
     {$match: {_id: mongoose.Types.ObjectId(id)}},
@@ -117,7 +118,7 @@ router.post('/create', isLoggedIn, (req, res) => {
   const {_id} = req.user;
 
   if (!_id || !isIdValid(_id) || !title || !body)
-    return res.status(400).send({error: 'Not all information sent'});
+    return res.status(400).send({error: {msg: 'Not all information sent'}});
 
   const newPost = new Post({
     author: _id,
@@ -136,11 +137,11 @@ router.put('/like', isLoggedIn, (req, res) => {
   const {_id} = req.user;
 
   if (!postId || !isIdValid(postId))
-    return res.status(400).send({error: 'Not all information sent'});
+    return res.status(400).send({error: {msg: 'Not all information sent'}});
 
   Post.findById(postId).then(post => {
     if (post.likes.includes(_id)) {
-      return res.status(400).json({error: 'Already liked post'});
+      return res.status(400).send({error: {msg: 'Already liked post'}});
     }
 
     post.likes.push(_id);
@@ -156,12 +157,12 @@ router.put('/unlike', isLoggedIn, (req, res) => {
   const {_id} = req.user;
 
   if (!postId || !isIdValid(postId))
-    return res.status(400).send({error: 'Not all information sent'});
+    return res.status(400).send({error: {msg: 'Not all information sent'}});
 
   Post.findById(postId).then(post => {
     const index = post.likes.indexOf(_id);
     if (index === -1) {
-      return res.status(400).json({error: 'User did not like post'});
+      return res.status(400).send({error: {msg: 'User did not like post'}});
     }
 
     post.likes.splice(index, 1);
