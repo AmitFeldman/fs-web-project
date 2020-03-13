@@ -31,7 +31,7 @@ const ManageUsers: FC = () => {
     });
   }, [filterData]);
 
-  const updateUsers = (updatedUser: User) => {
+  const updateLocalUser = (updatedUser: User) => {
     setUsers(currentUsers => {
       const index = currentUsers.findIndex(({_id}) => _id === updatedUser._id);
 
@@ -43,7 +43,7 @@ const ManageUsers: FC = () => {
     });
   };
 
-  const removeUser = (userId: string) => {
+  const removeLocalUser = (userId: string) => {
     setUsers(currentUsers => {
       const index = currentUsers.findIndex(({_id}) => _id === userId);
 
@@ -71,8 +71,8 @@ const ManageUsers: FC = () => {
           <Grid item key={user._id} xs={12}>
             <UserRow
               user={user}
-              onUserUpdate={updateUsers}
-              onUserDelete={removeUser}
+              onUserUpdate={updateLocalUser}
+              onUserDelete={removeLocalUser}
             />
           </Grid>
         ))}
