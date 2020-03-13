@@ -6,8 +6,7 @@ import {useHistory} from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import DataFooter from '../../DataFooter/DataFooter';
-import LikePost from '../../LikePost/LikePost';
-import {Grid} from '@material-ui/core';
+import LikeWrapper from '../../LikeWrapper/LikeWrapper';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,69 +27,47 @@ interface PostCardProps {
   post: Post;
 }
 
-const PostCard: FC<PostCardProps> = ({
-  post: {_id, title, body, comments, author, date, likes},
-}) => {
-  const [localLikes, setLocalLikes] = useState<string[]>(likes);
+const PostCard: FC<PostCardProps> = ({post}) => {
+  const [localPost, setLocalPost] = useState<Post>(post);
   const history = useHistory();
   const {header, paper} = useStyles();
 
   useEffect(() => {
-    setLocalLikes(likes);
-  }, [likes]);
+    setLocalPost(post);
+  }, [post]);
 
   const redirectToPost = () => {
-    history.push(`/post/${_id}`);
+    history.push(`/post/${localPost._id}`);
   };
 
   return (
     <Box maxWidth="100%">
-      <Grid container>
-        <Grid
-          item
-          xs={1}
-          container
-          direction="column"
-          justify="center"
-          alignItems="center">
-          <Grid item>
-            <Typography variant="h6">{localLikes.length}</Typography>
-          </Grid>
-          <Grid item>
-            <LikePost
-              postId={_id}
-              likes={localLikes}
-              onChange={newLikes => setLocalLikes(newLikes)}
-            />
-          </Grid>
-        </Grid>
-        <Grid item xs={11}>
-          <Paper className={paper}>
-            <header>
-              <Typography
-                noWrap
-                onClick={redirectToPost}
-                className={header}
-                variant="h4">
-                {title}
-              </Typography>
-            </header>
+      <LikeWrapper post={localPost} onChange={setLocalPost}>
+        <Paper className={paper}>
+          <header>
+            <Typography
+              noWrap
+              onClick={redirectToPost}
+              className={header}
+              variant="h4">
+              {localPost.title}
+            </Typography>
+          </header>
 
-            <section>
-              <Typography noWrap variant="body1">
-                {body}
-              </Typography>
-              <Typography variant="caption">
-                {comments.length} Comments
-              </Typography>
-            </section>
+          <section>
+            <Typography noWrap variant="body1">
+              {localPost.body}
+            </Typography>
+            <Typography variant="caption">
+              {localPost.comments.length} Comments
+            </Typography>
+          </section>
 
-            <footer>
-              <DataFooter user={author} date={date} />
-            </footer>
-          </Paper>
-        </Grid>
-      </Grid>
+          <footer>
+            <DataFooter user={localPost.author} date={localPost.date} />
+          </footer>
+        </Paper>
+      </LikeWrapper>
     </Box>
   );
 };

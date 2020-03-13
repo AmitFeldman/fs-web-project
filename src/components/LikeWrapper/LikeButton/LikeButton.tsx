@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
-import {useAuth} from '../../context/AuthContext';
+import {useAuth} from '../../../context/AuthContext';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import IconButton from '@material-ui/core/IconButton';
-import {likePost, unlikePost} from '../../utils/posts-api';
+import {likePost, unlikePost} from '../../../utils/posts-api';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import {pink} from '@material-ui/core/colors';
 
@@ -25,7 +25,11 @@ interface LikePostProps {
   onChange?: (newLikes: string[]) => void;
 }
 
-const LikePost: FC<LikePostProps> = ({postId, likes, onChange = () => {}}) => {
+const LikeButton: FC<LikePostProps> = ({
+  postId,
+  likes,
+  onChange = () => {},
+}) => {
   const {user} = useAuth();
 
   const {button} = useStyles();
@@ -49,4 +53,4 @@ const LikePost: FC<LikePostProps> = ({postId, likes, onChange = () => {}}) => {
   );
 };
 
-export default LikePost;
+export default LikeButton;

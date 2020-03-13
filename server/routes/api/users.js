@@ -1,5 +1,7 @@
 import {Router} from 'express';
 import User from '../../models/User';
+import {isIdValid} from '../../utils/validation';
+import {isAdmin} from '../../middlewares/auth';
 
 const router = new Router();
 
@@ -72,6 +74,72 @@ router.post('/login', (req, res) => {
 
     res.json(user);
   });
+});
+
+// POST api/users
+router.post('', (req, res) => {
+  const {usernameFilter, emailFilter, isAdminFilter} = req.body;
+
+  const matchers = [];
+
+  if (usernameFilter) {
+    matchers.push({username: {$regex: `.*${usernameFilter}.*`}});
+  }
+
+  if (emailFilter) {
+    matchers.push({email: {$regex: `.*${emailFilter}.*`}});
+  }
+
+  if (isAdminFilter !== undefined) {
+    matchers.push({isAdmin: isAdminFilter});
+  }
+
+  const pipeline = [{$sort: {date: -1}}];
+  if (matchers.length > 0) pipeline.unshift({$match: {$and: matchers}});
+
+  User.aggregate(pipeline).exec((err, result) => {
+    if (err) console.log(err);
+    res.json(result);
+  });
+});
+
+// PUT api/users/update
+router.put('/update', isAdmin, (req, res) => {
+  const {userId, username, email, isAdmin} = req.body;
+
+  if (!userId || !isIdValid(userId))
+    return res.status(400).send({error: 'Not all information sent'});
+
+  User.findById(userId).then(user => {
+    if (username && user.username !== username) {
+      user.username = username;
+    }
+
+    if (email && user.email !== email) {
+      user.email = email;
+    }
+
+    if (isAdmin !== undefined && user.isAdmin !== isAdmin) {
+      user.isAdmin = isAdmin;
+    }
+
+    user
+      .save()
+      .then(user => res.json(user))
+      .catch(err => console.log(err.message));
+  });
+});
+
+// POST api/users/delete
+router.delete('/delete', isAdmin, (req, res) => {
+  const {userId} = req.body;
+
+  if (!userId || !isIdValid(userId))
+    return res.status(400).send({error: 'Not all information sent'});
+
+  User.findByIdAndDelete(userId)
+    .then(() => res.json({message: 'User successfully deleted'}))
+    .catch(err => console.log(err.message));
 });
 
 export default router;

@@ -4,7 +4,7 @@ import {CommentItem} from './comments-api';
 import {BasicType} from '../types/basic-type';
 
 export interface Post extends BasicType {
-  author: User;
+  author: User | undefined;
   title: string;
   body: string;
   comments: string[];
@@ -23,14 +23,8 @@ const getPosts = async (): Promise<Post[]> => {
   return await client<{}, Post[]>('posts');
 };
 
-const getRecommendedPosts = async (): Promise<Post[]> => {
-  return await client<{}, Post[]>('posts/recommended');
-};
-
-type IdArray = Post['_id'][];
-
-const getPostById = async (id: Post['_id']): Promise<PostWithComments> => {
-  return await client<{}, PostWithComments>(`posts/id/${id}`);
+const getPostById = async (id: Post['_id']): Promise<Post> => {
+  return await client<{}, Post>(`posts/id/${id}`);
 };
 
 export type CreatePostBody = Pick<Post, 'title' | 'body'>;
@@ -59,4 +53,21 @@ const unlikePost = async (postId: Post['_id']): Promise<BasicPost> => {
   });
 };
 
-export {getPosts, getRecommendedPosts, createPost, getPostById, likePost, unlikePost};
+export interface DateCountData {
+  count: number;
+  date: string;
+}
+
+const getPostsPerDayCount = async (): Promise<DateCountData[]> => {
+  return await client<{}, DateCountData[]>('posts/stats-days');
+};
+
+export {
+  getPosts,
+  getRecommendedPosts
+  createPost,
+  getPostById,
+  likePost,
+  unlikePost,
+  getPostsPerDayCount,
+};
