@@ -39,4 +39,45 @@ const getUserByUsername = async (username: User['username']): Promise<User> => {
   return await client<{}, User>(`users/username/${username}`);
 };
 
-export {register, login, getUserByUsername, getMe};
+export interface GetUsersBody {
+  usernameFilter?: string;
+  emailFilter?: string;
+  isAdminFilter?: boolean;
+}
+
+const getUsers = async (getUsersBody: GetUsersBody): Promise<User[]> => {
+  return await client<GetUsersBody, User[]>('users', {
+    body: getUsersBody,
+  });
+};
+
+export interface UpdateUserBody {
+  userId: string;
+  username?: string;
+  email?: string;
+  isAdmin?: boolean;
+}
+
+const updateUser = async (updateUserBody: UpdateUserBody): Promise<User> => {
+  return await client<UpdateUserBody, User>('users/update', {
+    method: 'PUT',
+    body: updateUserBody,
+  });
+};
+
+const deleteUser = async (deleteUserBody: {userId: string}): Promise<{}> => {
+  return await client<{userId: string}, {}>('users/delete', {
+    body: deleteUserBody,
+    method: 'DELETE',
+  });
+};
+
+export {
+  register,
+  login,
+  getUserByUsername,
+  getMe,
+  getUsers,
+  updateUser,
+  deleteUser,
+};

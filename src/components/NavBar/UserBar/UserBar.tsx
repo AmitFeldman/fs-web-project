@@ -7,16 +7,7 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import {makeStyles, createStyles, Theme} from '@material-ui/core/styles';
 import {User} from '../../../utils/users-api';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    navBarText: {
-      alignSelf: 'center',
-    },
-  })
-);
 
 interface UserBarProps {
   user: User | null;
@@ -25,13 +16,12 @@ interface UserBarProps {
 
 const UserBar: FC<UserBarProps> = ({user, logout}) => {
   const [userMenuAnchor, setUserMenuAnchor] = useState();
-  const {navBarText} = useStyles();
 
   const closeUserMenu = () => setUserMenuAnchor(null);
 
   return user ? (
     <>
-      <Grid item className={navBarText}>
+      <Grid item>
         <Typography>{`Hello, ${user.username}`}</Typography>
       </Grid>
       <Grid item>
@@ -60,7 +50,7 @@ const UserBar: FC<UserBarProps> = ({user, logout}) => {
     </>
   ) : (
     <>
-      <Grid item className={navBarText}>
+      <Grid item>
         <Button
           color="inherit"
           component={RouterLink}
@@ -69,7 +59,7 @@ const UserBar: FC<UserBarProps> = ({user, logout}) => {
           Login
         </Button>
       </Grid>
-      <Grid item className={navBarText}>
+      <Grid item>
         <Button
           color="inherit"
           component={RouterLink}

@@ -8,7 +8,7 @@ const AdminRoute: FC<RouteProps> = ({children, ...rest}) => {
   return (
     <Route
       {...rest}
-      render={() => (isUserAdmin ? children : <Redirect to="/error" />)}
+      render={() => (isUserAdmin() ? children : <Redirect to="/error" />)}
     />
   );
 };
