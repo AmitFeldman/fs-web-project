@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState, useRef} from 'react';
 import {
   deleteUser,
   getUsers,
@@ -20,6 +20,7 @@ import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
 const ManageUsers: FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -111,65 +112,79 @@ const UserRow: FC<UserRowProps> = ({user, onUserUpdate, onUserDelete}) => {
   };
 
   const localUserChanged = (): boolean => {
-    if (localUser.username !== user.username) return true;
-    if (localUser.email !== user.email) return true;
-    return localUser.isAdmin !== user.isAdmin;
+    return (
+      localUser.username !== user.username ||
+      localUser.email !== user.email ||
+      localUser.isAdmin !== user.isAdmin
+    );
   };
 
   return (
     <Paper>
-      <Grid container spacing={2} justify="space-around" alignItems="center">
-        <Grid item>
-          <TextField
-            label="Username"
-            value={localUser.username}
-            onChange={event => updateLocalUser(event.target.value, 'username')}
-          />
+      <ValidatorForm onSubmit={submitUpdate}>
+        <Grid container spacing={2} justify="space-around" alignItems="center">
+          <Grid item>
+            <TextValidator
+              name="username"
+              label="Username"
+              value={localUser.username}
+              onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                updateLocalUser(event.currentTarget.value, 'username');
+              }}
+              validators={['minStringLength:1']}
+              errorMessages={["Username can't be empty"]}
+            />
+          </Grid>
+          <Grid item>
+            <TextValidator
+              name="email"
+              label="Email"
+              value={localUser.email}
+              onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                updateLocalUser(event.currentTarget.value, 'email');
+              }}
+              validators={['minStringLength:1', 'isEmail']}
+              errorMessages={["Email can't be empty", 'Email is not valid']}
+            />
+          </Grid>
+          <Grid item>
+            <FormControl>
+              <InputLabel>Type</InputLabel>
+              <Select
+                value={localUser.isAdmin ? USER_TYPES.ADMIN : USER_TYPES.USER}
+                onChange={event => {
+                  const isAdmin = event.target.value === USER_TYPES.ADMIN;
+                  updateLocalUser(isAdmin, 'isAdmin');
+                }}>
+                <MenuItem value={USER_TYPES.ADMIN}>Admin</MenuItem>
+                <MenuItem value={USER_TYPES.USER}>User</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <Typography variant="caption" color="textSecondary">
+              Created
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {formatDate(user.date)}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Button
+              type="submit"
+              variant="contained"
+              color="secondary"
+              disabled={!localUserChanged()}>
+              Save
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={submitDelete}>
+              Delete
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item>
-          <TextField
-            label="Email"
-            value={localUser.email}
-            onChange={event => updateLocalUser(event.target.value, 'email')}
-          />
-        </Grid>
-        <Grid item>
-          <FormControl>
-            <InputLabel>Type</InputLabel>
-            <Select
-              value={localUser.isAdmin ? USER_TYPES.ADMIN : USER_TYPES.USER}
-              onChange={event => {
-                const isAdmin = event.target.value === USER_TYPES.ADMIN;
-                updateLocalUser(isAdmin, 'isAdmin');
-              }}>
-              <MenuItem value={USER_TYPES.ADMIN}>Admin</MenuItem>
-              <MenuItem value={USER_TYPES.USER}>User</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <Typography variant="caption" color="textSecondary">
-            Created
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            {formatDate(user.date)}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={!localUserChanged()}
-            onClick={submitUpdate}>
-            Save
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" color="primary" onClick={submitDelete}>
-            Delete
-          </Button>
-        </Grid>
-      </Grid>
+      </ValidatorForm>
     </Paper>
   );
 };

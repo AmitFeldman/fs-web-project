@@ -81,7 +81,7 @@ const Login: FC = () => {
           </Grid>
           <Grid item>
             <Button type="submit" variant="contained" color="primary">
-              Register
+              Submit
             </Button>
           </Grid>
         </Grid>

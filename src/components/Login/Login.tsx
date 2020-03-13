@@ -31,14 +31,6 @@ const Login: FC = () => {
     });
   };
 
-  // const handleCloseError = (event?: any, reason?: string) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-
-  //   setError('');
-  // };
-
   return (
     <>
       <ValidatorForm onSubmit={loginUser}>
@@ -73,7 +65,7 @@ const Login: FC = () => {
           </Grid>
           <Grid item>
             <Button type="submit" variant="contained" color="primary">
-              Login
+              Submit
             </Button>
           </Grid>
         </Grid>
@@ -91,30 +83,6 @@ const Login: FC = () => {
         }
         setMessage={setError}
       />
-      {/* <Snackbar
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        open={error !== ''}
-        autoHideDuration={5000}
-        onClose={handleCloseError}
-        message={error}
-        action={
-          <React.Fragment>
-            <Button
-              color="primary"
-              size="small"
-              component={RouterLink}
-              to="/register">
-              Register
-            </Button>
-            <IconButton size="small" color="inherit" onClick={handleCloseError}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
-        }
-      /> */}
     </>
   );
 };
