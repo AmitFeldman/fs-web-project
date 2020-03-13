@@ -6,16 +6,20 @@ import {User} from '../../utils/users-api';
 
 interface CardFooterProps {
   date: string;
-  user: User;
+  user: User | null;
 }
 
 const DataFooter: FC<CardFooterProps> = ({date, user}) => {
   return (
     <Typography variant="caption">
       Submitted {formatDate(date)} by{' '}
-      <UserLink user={user}>
-        <Typography variant="caption">{user.username}</Typography>
-      </UserLink>
+      {user ? (
+        <UserLink user={user}>
+          <Typography variant="caption">{user.username}</Typography>
+        </UserLink>
+      ) : (
+        <Typography variant="caption">DELETED</Typography>
+      )}
     </Typography>
   );
 };
