@@ -68,6 +68,7 @@ const Login: FC = () => {
         <Grid item>
           <TextValidator
             name="Password"
+            type="password"
             value={password}
             onChange={(e: React.FormEvent<HTMLInputElement>) => {
               setPassword(e.currentTarget.value);
