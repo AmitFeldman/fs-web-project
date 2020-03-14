@@ -29,13 +29,15 @@ const Statistics: FC = () => {
           {isPostsLoading ? (
             <CircularProgress />
           ) : (
-            <Bar
-              data={postsPerDay as any}
-              xAxis="date"
-              yAxis="count"
-              width={500}
-              height={250}
-            />
+            postsPerDay && (
+              <Bar
+                data={postsPerDay}
+                xAxis="date"
+                yAxis="count"
+                width={500}
+                height={250}
+              />
+            )
           )}
         </Grid>
         <Grid item sm={12} md={6}>
@@ -43,14 +45,19 @@ const Statistics: FC = () => {
           {isCommentsLoading ? (
             <CircularProgress />
           ) : (
-            <Bar
-              data={commentsPerDay as any}
-              xAxis="date"
-              yAxis="count"
-              width={500}
-              height={250}
-            />
+            commentsPerDay && (
+              <Bar
+                data={commentsPerDay}
+                xAxis="date"
+                yAxis="count"
+                width={500}
+                height={250}
+              />
+            )
           )}
+        </Grid>
+        <Grid item xs={12}>
+          ADD GRAPH
         </Grid>
       </Grid>
     </>
