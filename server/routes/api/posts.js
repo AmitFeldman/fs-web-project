@@ -19,7 +19,7 @@ router.get('', (req, res) => {
       },
     },
     {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
-    {$sort: {date: -1}}
+    {$sort: {date: -1}},
   ])
     .then(result => {
       res.json(result);
@@ -54,35 +54,43 @@ router.get('/stats-days', (req, res) => {
 });
 
 // GET api/posts/recommended
-router.get('/recommended', isLoggedIn ,(req, res) => {
-  const {_id: userId} = req.user;
+router.get('/recommended', isLoggedIn, (req, res) => {
+  const {_id} = req.user;
+  const userId = mongoose.Types.ObjectId(_id);
 
   Post.aggregate([
-    {$match: {likes: {$elemMatch: {$eq: mongoose.Types.ObjectId(userId)}}}},
-    {$group : {_id: "$author", count: {$sum: 1}}},
-    {$lookup: {
+    {
+      $match: {
+        $and: [{likes: userId}, {author: {$ne: userId}}],
+      },
+    },
+    {$group: {_id: '$author', count: {$sum: 1}}},
+    {
+      $lookup: {
         from: Post.collection.name,
         localField: '_id',
         foreignField: 'author',
-        as: 'post'
-      }},
+        as: 'post',
+      },
+    },
     {$unwind: {path: '$post'}},
-    {$replaceRoot:{newRoot:{$mergeObjects: [{ count: "$count"}, "$post" ]}}},
-    {$lookup: {
+    {$replaceRoot: {newRoot: {$mergeObjects: [{count: '$count'}, '$post']}}},
+    {
+      $lookup: {
         from: User.collection.name,
         localField: 'author',
         foreignField: '_id',
-        as: 'author'
-      }},
+        as: 'author',
+      },
+    },
     {$unwind: {path: '$author'}},
     {$sort: {count: -1, date: -1}},
-    {$project: {count: 0}}
-  ])
-    .exec((err, posts) => {
-      if (err) return console.log(err);
+    {$project: {count: 0}},
+  ]).exec((err, posts) => {
+    if (err) return console.log(err);
 
-      res.json(posts);
-    });
+    res.json(posts);
+  });
 });
 
 // GET api/posts/id/:id

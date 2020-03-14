@@ -5,9 +5,10 @@ import PostCard from '../PostCard/PostCard';
 
 interface PostListProps {
   posts: Post[];
+  onPostChange: (post: Post) => void;
 }
 
-const PostList: FC<PostListProps> = ({posts}) => {
+const PostList: FC<PostListProps> = ({posts, onPostChange}) => {
   return (
     <Grid
       container
@@ -17,7 +18,7 @@ const PostList: FC<PostListProps> = ({posts}) => {
       justify="center">
       {posts.map(post => (
         <Grid item key={post._id} xs={12}>
-          <PostCard post={post} />
+          <PostCard post={post} onPostChange={onPostChange} />
         </Grid>
       ))}
     </Grid>
