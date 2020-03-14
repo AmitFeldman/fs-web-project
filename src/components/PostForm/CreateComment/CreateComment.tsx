@@ -46,7 +46,7 @@ const CreateComment: FC<CreateCommentProps> = ({postId, onCreateComment}) => {
   };
 
   const submitComment = async () => {
-    if (!isUserLoggedIn() && user) {
+    if (isUserLoggedIn() && user) {
       try {
         const newComment = await createComment({comment, postId});
         onCreateComment({

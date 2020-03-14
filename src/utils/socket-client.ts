@@ -3,7 +3,7 @@ import {connect} from 'socket.io-client';
 const SOCKET_URI = 'http://localhost';
 const socket = connect(SOCKET_URI);
 
-export type SocketEvent = 'POST_CHANGE';
+export type SocketEvent = 'NEW_POST_EVENT';
 export type EventCallback<D> = (data: D) => void;
 
 // Adds a listener for socket event

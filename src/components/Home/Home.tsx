@@ -35,10 +35,6 @@ enum PostTabs {
   RECOMMENDED,
 }
 
-const includesPost = (post: Post, posts: Post[]): boolean => {
-  return posts.some(p => p._id === post._id);
-};
-
 const Home: FC = () => {
   const {user, isUserLoggedIn} = useAuth();
 
@@ -66,15 +62,11 @@ const Home: FC = () => {
   // Update the posts when there is a new one
   useEffect(() => {
     const cancelOnSocketEvent = onSocketEvent<Post>(
-      'POST_CHANGE',
-      changedPost => {
-        // Check that user is not author and that it is a new post
-        if (
-          changedPost.author?._id !== user?._id &&
-          !includesPost(changedPost, newPosts) &&
-          !includesPost(changedPost, posts)
-        )
-          setNewPosts(newPosts => [changedPost, ...newPosts]);
+      'NEW_POST_EVENT',
+      newPost => {
+        // Check that user is not author of this new post
+        if (newPost.author?._id !== user?._id)
+          setNewPosts(newPosts => [newPost, ...newPosts]);
       }
     );
 

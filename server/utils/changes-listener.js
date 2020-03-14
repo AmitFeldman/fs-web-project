@@ -3,11 +3,10 @@ import {emitEvent} from './socket-service';
 import BsonObjectId from 'bson-objectid';
 import User from '../models/User';
 
-const POST_CHANGE_EVENT = 'POST_CHANGE';
+const NEW_POST_EVENT = 'NEW_POST';
 
-// Because of azure cosmos db this is the only valid query https://docs.microsoft.com/en-us/azure/cosmos-db/mongodb-change-streams
 const pipeline = [
-  {$match: {operationType: {$in: ['insert', 'update', 'replace']}}},
+  {$match: {operationType: {$in: ['insert']}}},
   {$project: {fullDocument: 1}},
 ];
 const options = {fullDocument: 'updateLookup'};
@@ -33,7 +32,7 @@ const initChangesListener = () => {
 };
 
 const onNewPost = postId => {
-  emitEvent(POST_CHANGE_EVENT, postId);
+  emitEvent(NEW_POST_EVENT, postId);
 };
 
 export {initChangesListener};

@@ -38,7 +38,7 @@ app.use('/api/locations', locations);
 // Connect to MongoDB
 console.log(`connecting to MongoDB through uri ${mongo.mongoURI}...`);
 mongoose
-  .connect(mongo.mongoURI, {useNewUrlParser: true})
+  .connect(mongo.mongoURI, {useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => console.log('successfully connected to MongoDB...'))
   .catch(err => console.log(err));
 

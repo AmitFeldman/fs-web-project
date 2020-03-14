@@ -6,14 +6,13 @@ const express = {
 };
 
 const mongo = {
-  user: 'alon2',
-  host: 'alon2.mongo.cosmos.azure.com',
-  port: '10255',
+  user: 'admin',
+  host: 'cluster0-wrwyj.mongodb.net',
   database: 'fs-project',
   password: secrets.mongoPassword,
 };
 
-const {user, password, host, port, database} = mongo;
-mongo.mongoURI = `mongodb://${user}:${password}@${host}:${port}/${database}?ssl=true`;
+const {user, password, host, database} = mongo;
+mongo.mongoURI = `mongodb+srv://${user}:${password}@${host}/${database}?retryWrites=true&w=majority`;
 
 export {express, mongo};
