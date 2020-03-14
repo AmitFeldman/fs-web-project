@@ -61,14 +61,11 @@ const Home: FC = () => {
 
   // Update the posts when there is a new one
   useEffect(() => {
-    const cancelOnSocketEvent = onSocketEvent<Post>(
-      'NEW_POST_EVENT',
-      newPost => {
-        // Check that user is not author of this new post
-        if (newPost.author?._id !== user?._id)
-          setNewPosts(newPosts => [newPost, ...newPosts]);
-      }
-    );
+    const cancelOnSocketEvent = onSocketEvent<Post>('NEW_POST', newPost => {
+      // Check that user is not author of this new post
+      if (newPost.author?._id !== user?._id)
+        setNewPosts(newPosts => [newPost, ...newPosts]);
+    });
 
     return () => {
       cancelOnSocketEvent();
