@@ -20,6 +20,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import {ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+import {deleteItem, updateItem} from '../../utils/update-helper';
 
 const ManageUsers: FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -32,23 +33,11 @@ const ManageUsers: FC = () => {
   }, [filterData]);
 
   const updateLocalUser = (updatedUser: User) => {
-    setUsers(currentUsers => {
-      const index = currentUsers.findIndex(({_id}) => _id === updatedUser._id);
-
-      return [
-        ...currentUsers.slice(0, index),
-        updatedUser,
-        ...currentUsers.slice(index + 1, currentUsers.length),
-      ];
-    });
+    setUsers(currentUsers => updateItem<User>(updatedUser, currentUsers));
   };
 
   const removeLocalUser = (userId: string) => {
-    setUsers(currentUsers => {
-      const index = currentUsers.findIndex(({_id}) => _id === userId);
-
-      return [...currentUsers.splice(index, 1)];
-    });
+    setUsers(currentUsers => deleteItem<User>(userId, currentUsers));
   };
 
   return (

@@ -19,6 +19,7 @@ router.get('', (req, res) => {
       },
     },
     {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
+    {$sort: {date: -1}},
   ])
     .then(result => {
       res.json(result);
@@ -50,6 +51,46 @@ router.get('/stats-days', (req, res) => {
       res.json(result);
     })
     .catch(err => console.log(err));
+});
+
+// GET api/posts/recommended
+router.get('/recommended', isLoggedIn, (req, res) => {
+  const {_id} = req.user;
+  const userId = mongoose.Types.ObjectId(_id);
+
+  Post.aggregate([
+    {
+      $match: {
+        $and: [{likes: userId}, {author: {$ne: userId}}],
+      },
+    },
+    {$group: {_id: '$author', count: {$sum: 1}}},
+    {
+      $lookup: {
+        from: Post.collection.name,
+        localField: '_id',
+        foreignField: 'author',
+        as: 'post',
+      },
+    },
+    {$unwind: {path: '$post'}},
+    {$replaceRoot: {newRoot: {$mergeObjects: [{count: '$count'}, '$post']}}},
+    {
+      $lookup: {
+        from: User.collection.name,
+        localField: 'author',
+        foreignField: '_id',
+        as: 'author',
+      },
+    },
+    {$unwind: {path: '$author'}},
+    {$sort: {count: -1, date: -1}},
+    {$project: {count: 0}},
+  ]).exec((err, posts) => {
+    if (err) return console.log(err);
+
+    res.json(posts);
+  });
 });
 
 // GET api/posts/id/:id

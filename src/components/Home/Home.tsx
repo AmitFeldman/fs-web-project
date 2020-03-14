@@ -5,46 +5,65 @@ import Grid from '@material-ui/core/Grid';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import {getPosts, Post} from '../../utils/posts-api';
+import {getPosts, getRecommendedPosts, Post} from '../../utils/posts-api';
 import {useAuth} from '../../context/AuthContext';
-import {useAsync} from 'react-async';
 import {onSocketEvent} from '../../utils/socket-client';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import NewsCard from '../NewsCard/NewsCard';
+import {updateItem} from '../../utils/update-helper';
+import {useAsync} from 'react-async';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     header: {
       textShadow: `1.5px 1.5px ${theme.palette.text.hint}`,
+      paddingBottom: '5px',
     },
     container: {
       width: '80%',
-    },
-    newPostsButton: {
-      float: 'right',
-    },
-    modal: {
-      width: '80%',
       margin: 'auto',
+    },
+    tabButton: {
+      margin: theme.spacing(1),
     },
   })
 );
+
+enum PostTabs {
+  LATEST,
+  RECOMMENDED,
+}
 
 const includesPost = (post: Post, posts: Post[]): boolean => {
   return posts.some(p => p._id === post._id);
 };
 
 const Home: FC = () => {
+  const {user, isUserLoggedIn} = useAuth();
+
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPosts, setNewPosts] = useState<Post[]>([]);
-  const {user} = useAuth();
+  const [recommendedPosts, setRecommendedPosts] = useState<Post[]>([]);
+
   const [helpOpen, setHelpOpen] = useState(false);
+  const [tab, setTab] = useState<PostTabs>(
+    isUserLoggedIn() ? PostTabs.RECOMMENDED : PostTabs.LATEST
+  );
 
-  const {header, container, newPostsButton, modal} = useStyles();
+  const {header, container, tabButton} = useStyles();
 
+  // Get Posts
   useAsync(getPosts, {onResolve: result => setPosts(result)});
 
+  // Get Recommended Posts each time user switches to recommended tab
+  useEffect(() => {
+    if (isUserLoggedIn() && tab === PostTabs.RECOMMENDED) {
+      getRecommendedPosts().then(result => setRecommendedPosts(result));
+    }
+  }, [tab]);
+
+  // Update the posts when there is a new one
   useEffect(() => {
     const cancelOnSocketEvent = onSocketEvent<Post>(
       'POST_CHANGE',
@@ -69,10 +88,25 @@ const Home: FC = () => {
     setNewPosts([]);
   };
 
+  // Triggers when posts are liked
+  const postChange = (post: Post) => {
+    if (tab === PostTabs.RECOMMENDED) {
+      setRecommendedPosts(currPosts => updateItem<Post>(post, currPosts));
+    }
+
+    setPosts(currPosts => updateItem<Post>(post, currPosts));
+  };
+
   return (
     <>
-      <Grid container direction="column" spacing={2} alignItems="center">
-        <Grid item xs={12} className={container}>
+      <Grid
+        className={container}
+        container
+        direction="column"
+        spacing={2}
+        justify="center"
+        alignItems="stretch">
+        <Grid item className="maxWidth">
           <CreatePost
             onCreatePost={newPost => {
               setPosts(currPosts => [newPost, ...currPosts]);
@@ -80,12 +114,36 @@ const Home: FC = () => {
             onHelpClick={() => setHelpOpen(true)}
           />
         </Grid>
-        <Grid item xs={12} className={container}>
-          <Typography variant="h4" className={header}>
-            Latest Posts{' '}
-            {newPosts.length > 0 && (
+
+        <Grid item container alignItems="center">
+          <Grid item container xs={10} spacing={2}>
+            <Grid item>
+              <Typography variant="h4" className={header}>
+                Posts
+              </Typography>
+            </Grid>
+            <Grid item>
               <Button
-                className={newPostsButton}
+                className={tabButton}
+                variant={tab === PostTabs.LATEST ? 'outlined' : 'text'}
+                color="secondary"
+                onClick={() => setTab(PostTabs.LATEST)}>
+                Latest
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                className={tabButton}
+                variant={tab === PostTabs.RECOMMENDED ? 'outlined' : 'text'}
+                color="secondary"
+                onClick={() => setTab(PostTabs.RECOMMENDED)}>
+                Recommended
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid item xs={2}>
+            {newPosts.length > 0 && tab === PostTabs.LATEST && (
+              <Button
                 variant="contained"
                 color="secondary"
                 onClick={showNewPosts}
@@ -93,11 +151,27 @@ const Home: FC = () => {
                 Show {newPosts.length} New Post{newPosts.length > 1 && 's'}
               </Button>
             )}
-          </Typography>
-          <Divider />
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
         </Grid>
-        <Grid item xs={8}>
-          <PostList posts={posts} />
+
+        <Grid item className={container}>
+          {tab === PostTabs.RECOMMENDED && !isUserLoggedIn() ? (
+            <Typography variant="h4" align="center">
+              Log in to see recommended posts!
+            </Typography>
+          ) : tab === PostTabs.RECOMMENDED && recommendedPosts.length === 0 ? (
+            <Typography variant="h4" align="center">
+              Like some posts so we can figure out what you like!
+            </Typography>
+          ) : (
+            <PostList
+              posts={tab === PostTabs.RECOMMENDED ? recommendedPosts : posts}
+              onPostChange={postChange}
+            />
+          )}
         </Grid>
       </Grid>
 
@@ -105,7 +179,7 @@ const Home: FC = () => {
         open={helpOpen}
         onClose={() => setHelpOpen(false)}
         style={{top: '10vh'}}
-        className={modal}>
+        className={container}>
         <section>
           <NewsCard />
         </section>

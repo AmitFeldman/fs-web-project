@@ -23,7 +23,7 @@ const Comment: FC<CommentProps> = ({commentItem: {date, comment, author}}) => {
   return (
     <Paper className={paper}>
       <Typography variant="body2">{comment}</Typography>
-
+      <br />
       <DataFooter user={author} date={date} />
     </Paper>
   );

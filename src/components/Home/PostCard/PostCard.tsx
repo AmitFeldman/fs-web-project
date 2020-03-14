@@ -25,24 +25,20 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface PostCardProps {
   post: Post;
+  onPostChange: (newPost: Post) => void;
 }
 
-const PostCard: FC<PostCardProps> = ({post}) => {
-  const [localPost, setLocalPost] = useState<Post>(post);
+const PostCard: FC<PostCardProps> = ({post, onPostChange}) => {
   const history = useHistory();
   const {header, paper} = useStyles();
 
-  useEffect(() => {
-    setLocalPost(post);
-  }, [post]);
-
   const redirectToPost = () => {
-    history.push(`/post/${localPost._id}`);
+    history.push(`/post/${post._id}`);
   };
 
   return (
     <Box maxWidth="100%">
-      <LikeWrapper post={localPost} onChange={setLocalPost}>
+      <LikeWrapper post={post} onChange={onPostChange}>
         <Paper className={paper}>
           <header>
             <Typography
@@ -50,21 +46,21 @@ const PostCard: FC<PostCardProps> = ({post}) => {
               onClick={redirectToPost}
               className={header}
               variant="h4">
-              {localPost.title}
+              {post.title}
             </Typography>
           </header>
 
           <section>
             <Typography noWrap variant="body1">
-              {localPost.body}
+              {post.body}
             </Typography>
             <Typography variant="caption">
-              {localPost.comments.length} Comments
+              {post.comments.length} Comments
             </Typography>
           </section>
 
           <footer>
-            <DataFooter user={localPost.author} date={localPost.date} />
+            <DataFooter user={post.author} date={post.date} />
           </footer>
         </Paper>
       </LikeWrapper>
