@@ -10,9 +10,10 @@ import UserFiltersPanel, {
   USER_TYPES,
   UserFilterData,
 } from './UserFiltersPanel/UserFiltersPanel';
-import {FormControl, Typography} from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import {formatDate} from '../../utils/date-helper';

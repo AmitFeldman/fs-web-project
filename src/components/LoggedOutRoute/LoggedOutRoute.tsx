@@ -2,15 +2,14 @@ import React, {FC} from 'react';
 import {Redirect, Route, RouteProps} from 'react-router-dom';
 import {useAuth} from '../../context/AuthContext';
 
-const LoggedOutRoute: FC<RouteProps> = ({children, ...rest}) => {
+const LoggedOutRoute: FC<RouteProps> = ({...rest}) => {
   const {isUserLoggedIn} = useAuth();
 
-  return (
-    <Route
-      {...rest}
-      render={() => (isUserLoggedIn() ? <Redirect to="/" /> : children)}
-    />
-  );
+  if (isUserLoggedIn()) {
+    return <Redirect to="/" />;
+  }
+
+  return <Route {...rest} />;
 };
 
 export default LoggedOutRoute;

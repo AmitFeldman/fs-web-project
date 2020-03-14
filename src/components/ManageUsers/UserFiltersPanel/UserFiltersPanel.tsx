@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {GetUsersBody} from '../../../utils/users-api';
 import PanelWrapper from '../../PanelWrapper/PanelWrapper';
-import {FormControl} from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';

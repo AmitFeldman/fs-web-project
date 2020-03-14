@@ -1,20 +1,23 @@
-import React, {FC} from 'react';
 import './App.css';
+import React, {FC, lazy, Suspense} from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
-import Login from './components/Login/Login';
 import NavBar from './components/NavBar/NavBar';
-import Error from './components/Error/Error';
-import Register from './components/Register/Register';
-import LoggedOutRoute from './components/LoggedOutRoute/LoggedOutRoute';
-import Profile from './components/Profile/Profile';
-import Container from '@material-ui/core/Container';
-import Home from './components/Home/Home';
-import Post from './components/PostForm/PostForm';
 import ScrollTop from './components/ScrollTop/ScrollTop';
-import About from './components/About/About';
 import AdminRoute from './components/AdminRoute/AdminRoute';
-import ManageUsers from './components/ManageUsers/ManageUsers';
-import Statistics from './components/Statistics/Statistics';
+import LoggedOutRoute from './components/LoggedOutRoute/LoggedOutRoute';
+import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+// Lazy route imports
+const Home = lazy(() => import('./components/Home/Home'));
+const Error = lazy(() => import('./components/Error/Error'));
+const PostForm = lazy(() => import('./components/PostForm/PostForm'));
+const Profile = lazy(() => import('./components/Profile/Profile'));
+const About = lazy(() => import('./components/About/About'));
+const ManageUsers = lazy(() => import('./components/ManageUsers/ManageUsers'));
+const Statistics = lazy(() => import('./components/Statistics/Statistics'));
+const Login = lazy(() => import('./components/Login/Login'));
+const Register = lazy(() => import('./components/Register/Register'));
 
 const ANCHOR = 'back-to-top-anchor';
 
@@ -26,45 +29,23 @@ const App: FC = () => {
       </div>
 
       <Container className="Container">
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
+        <Suspense fallback={<CircularProgress />}>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/error" component={Error} />
+            <Route path="/post/:postId" component={PostForm} />
+            <Route path="/user/:username" component={Profile} />
+            <Route path="/about" component={About} />
 
-          <Route path="/error">
-            <Error />
-          </Route>
+            <AdminRoute path="/admin/users" component={ManageUsers} />
+            <AdminRoute path="/admin/statistics" component={Statistics} />
 
-          <Route path="/post/:postId">
-            <Post />
-          </Route>
+            <LoggedOutRoute path="/login" component={Login} />
+            <LoggedOutRoute path="/register" component={Register} />
 
-          <Route path="/user/:username">
-            <Profile />
-          </Route>
-
-          <Route path="/about">
-            <About />
-          </Route>
-
-          <AdminRoute path="/admin/users">
-            <ManageUsers />
-          </AdminRoute>
-
-          <AdminRoute path="/admin/statistics">
-            <Statistics />
-          </AdminRoute>
-
-          <LoggedOutRoute path="/login">
-            <Login />
-          </LoggedOutRoute>
-
-          <LoggedOutRoute path="/register">
-            <Register />
-          </LoggedOutRoute>
-
-          <Redirect from="*" to="/error" />
-        </Switch>
+            <Redirect from="*" to="/error" />
+          </Switch>
+        </Suspense>
       </Container>
 
       <ScrollTop anchorId={ANCHOR} />
