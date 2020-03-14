@@ -7,6 +7,7 @@ import Fab from '@material-ui/core/Fab';
 import {Create} from '@material-ui/icons';
 import {CommentItem, createComment} from '../../../utils/comments-api';
 import {useAuth} from '../../../context/AuthContext';
+import {useAlert} from '../../../context/AlertContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,14 +38,15 @@ interface CreateCommentProps {
 const CreateComment: FC<CreateCommentProps> = ({postId, onCreateComment}) => {
   const [comment, setComment] = useState('');
   const {input, inputContainer, root, fab} = useStyles();
-  const {user} = useAuth();
+  const {user, isUserLoggedIn} = useAuth();
+  const {alert} = useAlert();
 
   const clearForm = () => {
     setComment('');
   };
 
   const submitComment = async () => {
-    if (user) {
+    if (!isUserLoggedIn() && user) {
       try {
         const newComment = await createComment({comment, postId});
         onCreateComment({
@@ -56,7 +58,11 @@ const CreateComment: FC<CreateCommentProps> = ({postId, onCreateComment}) => {
         console.log(e);
       }
     } else {
-      console.log('not logged in');
+      alert({
+        message: "You can't comment if you aren't logged in!",
+        redirectPath: '/login',
+        buttonText: 'Login',
+      });
     }
   };
 

@@ -9,6 +9,7 @@ import {createPost, Post} from '../../../utils/posts-api';
 import {useAuth} from '../../../context/AuthContext';
 import {HelpOutline} from '@material-ui/icons';
 import Tooltip from '@material-ui/core/Tooltip';
+import {useAlert} from '../../../context/AlertContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +47,7 @@ const CreatePost: FC<CreatePostProps> = ({onCreatePost, onHelpClick}) => {
   const [body, setBody] = useState('');
   const {input, inputContainer, root, fab, leftFab, rightFab} = useStyles();
   const {user} = useAuth();
+  const {alert} = useAlert();
 
   const clearForm = () => {
     setTitle('');
@@ -65,7 +67,11 @@ const CreatePost: FC<CreatePostProps> = ({onCreatePost, onHelpClick}) => {
         console.log(e);
       }
     } else {
-      console.log('not logged in');
+      alert({
+        message: "You can't post if you aren't logged in!",
+        redirectPath: '/login',
+        buttonText: 'Login',
+      });
     }
   };
 
