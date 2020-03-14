@@ -24,7 +24,8 @@ const deleteItem = <Item extends BasicType>(
   const index = itemArray.findIndex(({_id}) => _id === deleteId);
 
   if (index > -1) {
-    return [...itemArray.splice(index, 1)];
+    itemArray.splice(index, 1);
+    return [...itemArray];
   }
 
   return itemArray;

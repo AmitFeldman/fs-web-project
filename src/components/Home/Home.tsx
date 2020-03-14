@@ -61,7 +61,7 @@ const Home: FC = () => {
     if (isUserLoggedIn() && tab === PostTabs.RECOMMENDED) {
       getRecommendedPosts().then(result => setRecommendedPosts(result));
     }
-  }, [tab]);
+  }, [tab, isUserLoggedIn]);
 
   // Update the posts when there is a new one
   useEffect(() => {
