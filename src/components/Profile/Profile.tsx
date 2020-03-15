@@ -6,6 +6,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {useUserLocation} from '../UserLink/UserLink';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import {getPostsByUserId, Post} from '../../utils/posts-api';
+import PostList from '../Home/PostList/PostList';
+import Box from '@material-ui/core/Box';
 
 const Profile: FC = () => {
   const {username} = useParams();
@@ -25,6 +28,7 @@ const Profile: FC = () => {
   };
 
   const [profile, setProfile] = useState<User | null | undefined>(getProfile());
+  const [postHistory, setPostHistory] = useState<Post[]>([]);
 
   useEffect(() => {
     if (!profile && profile !== null && username) {
@@ -33,6 +37,14 @@ const Profile: FC = () => {
         .catch(() => setProfile(null));
     }
   }, [username, profile]);
+
+  useEffect(() => {
+    const userId = profile?._id;
+
+    if (userId) {
+      getPostsByUserId(userId).then(result => setPostHistory(result));
+    }
+  }, [profile]);
 
   if (profile === null) {
     return (
@@ -52,23 +64,50 @@ const Profile: FC = () => {
   const {email, isAdmin} = profile;
 
   return (
-    <div>
-      <Typography variant="h4">User Information</Typography>
+    <>
+      <Typography variant="h3">User Information</Typography>
       <Divider />
       <br />
 
-      <Typography variant="body1">Username: {username}</Typography>
-      <Typography variant="body1">Email: {email}</Typography>
       {isAdmin && (
-        <Typography variant="body1">This user is an admin.</Typography>
+        <>
+          <Typography color="error" variant="h6">
+            This user is an administrator.
+          </Typography>
+          <br />
+        </>
       )}
 
-      <br />
-      <Typography variant="h4">User Activity</Typography>
-      <Divider />
+      <Typography variant="h6">
+        Username:{' '}
+        <Typography variant="inherit" color="secondary">
+          {username}
+        </Typography>
+      </Typography>
 
-      <Typography> ADD USER ACTIVITY</Typography>
-    </div>
+      <Typography variant="h6">
+        Email:{' '}
+        <Typography variant="inherit" color="secondary">
+          {email}
+        </Typography>
+      </Typography>
+      <br />
+
+      <Divider />
+      <br />
+
+      <Typography variant="h4">Post History</Typography>
+
+      <br />
+      <Divider />
+      <br />
+
+      <Box width="80%" margin="auto">
+        <PostList posts={postHistory} />
+      </Box>
+
+      <br />
+    </>
   );
 };
 

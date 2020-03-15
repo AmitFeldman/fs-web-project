@@ -6,7 +6,6 @@ import {useHistory} from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import DataFooter from '../../DataFooter/DataFooter';
-import LikeWrapper from '../../LikeWrapper/LikeWrapper';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,10 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface PostCardProps {
   post: Post;
-  onPostChange: (newPost: Post) => void;
 }
 
-const PostCard: FC<PostCardProps> = ({post, onPostChange}) => {
+const PostCard: FC<PostCardProps> = ({post}) => {
   const history = useHistory();
   const {header, paper} = useStyles();
 
@@ -38,32 +36,30 @@ const PostCard: FC<PostCardProps> = ({post, onPostChange}) => {
 
   return (
     <Box maxWidth="100%">
-      <LikeWrapper post={post} onChange={onPostChange}>
-        <Paper className={paper}>
-          <header>
-            <Typography
-              noWrap
-              onClick={redirectToPost}
-              className={header}
-              variant="h4">
-              {post.title}
-            </Typography>
-          </header>
+      <Paper className={paper}>
+        <header>
+          <Typography
+            noWrap
+            onClick={redirectToPost}
+            className={header}
+            variant="h4">
+            {post.title}
+          </Typography>
+        </header>
 
-          <section>
-            <Typography noWrap variant="body1">
-              {post.body}
-            </Typography>
-            <Typography variant="caption">
-              {post.comments.length} Comments
-            </Typography>
-          </section>
+        <section>
+          <Typography noWrap variant="body1">
+            {post.body}
+          </Typography>
+          <Typography variant="caption">
+            {post.comments.length} Comments
+          </Typography>
+        </section>
 
-          <footer>
-            <DataFooter user={post.author} date={post.date} />
-          </footer>
-        </Paper>
-      </LikeWrapper>
+        <footer>
+          <DataFooter user={post.author} date={post.date} />
+        </footer>
+      </Paper>
     </Box>
   );
 };

@@ -31,6 +31,10 @@ const getPostById = async (id: Post['_id']): Promise<Post> => {
   return await client<{}, Post>(`posts/id/${id}`);
 };
 
+const getPostsByUserId = async (userId: User['_id']): Promise<Post[]> => {
+  return await client<{}, Post[]>(`posts/user/${userId}`);
+};
+
 export type CreatePostBody = Pick<Post, 'title' | 'body'>;
 
 const createPost = async (createPostData: CreatePostBody): Promise<Post> => {
@@ -66,6 +70,16 @@ const getPostsPerDayCount = async (): Promise<DateCountData[]> => {
   return await client<{}, DateCountData[]>('posts/stats-days');
 };
 
+interface PostUserData {
+  userCount: number;
+  postCount: number;
+  likes: number;
+}
+
+const getPostUserData = async (): Promise<PostUserData[]> => {
+  return await client<{}, PostUserData[]>('posts/stats-users');
+};
+
 export {
   getPosts,
   getRecommendedPosts,
@@ -73,5 +87,7 @@ export {
   getPostById,
   likePost,
   unlikePost,
+  getPostUserData,
+  getPostsByUserId,
   getPostsPerDayCount,
 };

@@ -1,4 +1,5 @@
 import {news} from '../config/config';
+import {getRandomInt} from './random-util';
 
 const NUM_ARTICLES = 20;
 const NEWS_API_URL = `http://newsapi.org/v2/top-headlines?country=us&pageSize=${NUM_ARTICLES}&apiKey=${news.apiKey}`;
@@ -32,13 +33,8 @@ const initArticles = async () => {
   articles = result.filter(a => Boolean(a));
 };
 
-// Get random number between 1 and max (inclusive)
-const getRandomInt = (max: number) => {
-  return Math.floor(Math.random() * max) + 1;
-};
-
 const getArticle = (): Article => {
-  return articles[getRandomInt(NUM_ARTICLES)];
+  return articles[getRandomInt(0, NUM_ARTICLES)];
 };
 
 export {getArticle, initArticles};

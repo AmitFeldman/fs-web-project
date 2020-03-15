@@ -93,6 +93,7 @@ router.get('/recommended', isLoggedIn, (req, res) => {
   });
 });
 
+// Get post by post id
 // GET api/posts/id/:id
 router.get('/id/:id', (req, res) => {
   const {id} = req.params;
@@ -116,6 +117,62 @@ router.get('/id/:id', (req, res) => {
       // Aggregate returns array, but this query can only return one document
       // because of match stage by id
       res.json(result[0]);
+    })
+    .catch(err => console.log(err));
+});
+
+// Get all posts by user id
+// GET api/posts/userId/:userId
+router.get('/user/:userId', (req, res) => {
+  const {userId} = req.params;
+
+  if (!isIdValid(userId))
+    return res.status(400).send({error: {msg: 'Id not valid'}});
+
+  Post.aggregate([
+    {$match: {author: mongoose.Types.ObjectId(userId)}},
+    {
+      $lookup: {
+        from: User.collection.name,
+        localField: 'author',
+        foreignField: '_id',
+        as: 'author',
+      },
+    },
+    {$unwind: {path: '$author', preserveNullAndEmptyArrays: true}},
+  ])
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => console.log(err));
+});
+
+// GET /api/posts/stats-likes
+router.get('/stats-users', (req, res) => {
+  Post.aggregate([
+    {
+      $group: {
+        _id: '$author',
+        postCount: {$sum: 1},
+        likes: {$sum: {$size: '$likes'}},
+      },
+    },
+    {
+      $addFields: {
+        key: {$concat: [{$toString: '$likes'}, '-', {$toString: '$postCount'}]},
+      },
+    },
+    {
+      $group: {
+        _id: '$key',
+        userCount: {$sum: 1},
+        likes: {$first: '$likes'},
+        postCount: {$first: '$postCount'},
+      },
+    },
+  ])
+    .then(result => {
+      res.json(result);
     })
     .catch(err => console.log(err));
 });

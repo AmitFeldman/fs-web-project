@@ -158,7 +158,7 @@ const Home: FC = () => {
           ) : (
             <PostList
               posts={tab === PostTabs.RECOMMENDED ? recommendedPosts : posts}
-              onPostChange={postChange}
+              onPostLike={postChange}
             />
           )}
         </Grid>
