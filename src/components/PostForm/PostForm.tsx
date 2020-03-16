@@ -64,7 +64,7 @@ const PostForm: FC = () => {
           <DataFooter user={post.author} date={post.date} />
           <Divider />
 
-          <Typography paragraph variant="body1">
+          <Typography variant="body1" style={{wordWrap: 'break-word'}}>
             {post.body}
           </Typography>
           <Divider />

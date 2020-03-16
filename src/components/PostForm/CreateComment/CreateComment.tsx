@@ -1,5 +1,4 @@
 import React, {ChangeEvent, FC, useState} from 'react';
-import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
@@ -8,6 +7,9 @@ import {Create} from '@material-ui/icons';
 import {CommentItem, createComment} from '../../../utils/comments-api';
 import {useAuth} from '../../../context/AuthContext';
 import {useAlert} from '../../../context/AlertContext';
+import {TextValidator, ValidatorForm} from 'react-material-ui-form-validator';
+
+const MAX_COMMENT_LENGTH = 400;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,37 +70,45 @@ const CreateComment: FC<CreateCommentProps> = ({postId, onCreateComment}) => {
 
   return (
     <Paper className={root}>
-      <Grid
-        container
-        className={inputContainer}
-        direction="column"
-        spacing={2}
-        justify="center"
-        alignItems="stretch">
-        <Grid item>
-          <TextField
-            value={comment}
-            placeholder="Anything to add to the conversation?"
-            className={input}
-            variant="outlined"
-            multiline
-            rows={4}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setComment(event.target.value)
-            }
-          />
+      <ValidatorForm onSubmit={submitComment}>
+        <Grid
+          container
+          className={inputContainer}
+          direction="column"
+          spacing={2}
+          justify="center"
+          alignItems="stretch">
+          <Grid item>
+            <TextValidator
+              name="Comment"
+              value={comment}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setComment(event.target.value)
+              }
+              placeholder="Anything to add to the conversation?"
+              className={input}
+              variant="outlined"
+              multiline
+              rows={4}
+              validators={['required', `maxStringLength:${MAX_COMMENT_LENGTH}`]}
+              errorMessages={[
+                "Don't leave the comment empty!",
+                `Too long, let's try to keep it below ${MAX_COMMENT_LENGTH} characters!`,
+              ]}
+            />
+          </Grid>
+          <Grid item>
+            <Fab
+              type="submit"
+              className={fab}
+              color="primary"
+              variant="extended">
+              <Create />
+              Comment
+            </Fab>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Fab
-            className={fab}
-            color="primary"
-            variant="extended"
-            onClick={submitComment}>
-            <Create />
-            Comment
-          </Fab>
-        </Grid>
-      </Grid>
+      </ValidatorForm>
     </Paper>
   );
 };
