@@ -49,7 +49,7 @@ const Scatter: FC<ScatterProps<any>> = ({
       .call(
         d3
           .axisBottom(x)
-          .ticks(Math.max(...data.map(d => d[yProp])))
+          .ticks(Math.max(...data.map(d => d[xProp])))
           .tickFormat(d3.format('d'))
       );
     svg
